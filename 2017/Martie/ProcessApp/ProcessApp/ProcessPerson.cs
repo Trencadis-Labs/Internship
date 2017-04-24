@@ -68,7 +68,7 @@ namespace ProcessApp
             {
                 processResult.StatusFlag = true;
                 processResult.ErrorSuccesCode = ErrorCodes.GoodString.ToString();
-            }`
+            }
         }
 
         public override void PostProcessingProcess(ProcessResult processResult)

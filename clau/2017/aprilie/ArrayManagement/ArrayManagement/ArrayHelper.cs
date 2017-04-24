@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace ArrayManagement
 {
-    
 
-    public class ArrayHelper<T> 
+
+    public class ArrayHelper<T>
         where T : IEquatable<T>
     {
         protected readonly T[] elements;
@@ -28,7 +28,7 @@ namespace ArrayManagement
         /// </summary>
         /// <param name="array"></param>
         /// <returns>Row Length</returns>
-        public int GetRowLength() 
+        public int GetRowLength()
         {
             int rowLength = 0;
             rowLength = this.elements.Length;
@@ -41,9 +41,9 @@ namespace ArrayManagement
         /// </summary>
         /// <param name="element"></param>
         /// <returns>Index<int></returns>
-        public int SearchIndexOf(T element) 
+        public int SearchIndexOf(T element)
         {
-            int index=-1;
+            int index = -1;
             for (int i = 0; i < this.elements.Length; i++)
             {
                 if (this.elements[i].Equals(element))
@@ -62,15 +62,15 @@ namespace ArrayManagement
         /// <returns></returns>
         public T GetElemByIndex(int index)
         {
-            T elem;                
+            T elem;
             try
             {
                 elem = this.elements[index];
             }
-            catch(IndexOutOfRangeException e)
+            catch (IndexOutOfRangeException e)
             {
                 elem = default(T);
-                //Console.WriteLine(e.Message);
+                Console.WriteLine(e.Message);
             }
 
             return elem;
@@ -86,13 +86,13 @@ namespace ArrayManagement
 
         public List<T> SubstringReturn(int start, int length)
         {
-           T[] substring;
-           List<T> iList = new List<T>();
-           for(int i = start; i<= start+length; i++)
-           {
-               iList.Add(this.elements[i]);
-           }
-           return iList;
+            T[] substring;
+            List<T> iList = new List<T>();
+            for (int i = start; i <= start + length; i++)
+            {
+                iList.Add(this.elements[i]);
+            }
+            return iList;
         }
     }
 }

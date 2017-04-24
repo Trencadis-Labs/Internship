@@ -94,7 +94,7 @@ namespace ProcessApplication.Processes
     {
       WritePersonPropertiesToConsoleProcess.InstancesCount++;
 
-      Console.WriteLine($"Person(s) written till now: {WritePersonPropertiesToConsoleProcess.InstancesCount}");
+      Console.WriteLine("Person(s) written till now: {0}", WritePersonPropertiesToConsoleProcess.InstancesCount);
 
       return ProcessResult.Success();
     }

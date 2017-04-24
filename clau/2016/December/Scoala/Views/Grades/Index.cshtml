@@ -1,0 +1,51 @@
+﻿@model IEnumerable<Scoala.Models.GradeCourseStudent>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.studentName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.coursName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.grade)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.date_of_registration)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.studentName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.coursName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.grade)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.date_of_registration)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.id_grade }) |
+            @Html.ActionLink("Details", "Details", new { id=item.id_grade }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.id_grade })
+        </td>
+    </tr>
+}
+
+</table>
