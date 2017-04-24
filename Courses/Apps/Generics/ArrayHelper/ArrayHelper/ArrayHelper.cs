@@ -104,14 +104,14 @@ namespace ArrayHelper
         throw new IndexOutOfRangeException($"Index '{index}' is outside the bounds of the array [0, {upperBound}]");
       }
 
-      if (index + length >= array.Length)
+      if (index + length > array.Length)
       {
         throw new IndexOutOfRangeException($"The combination of start-index '{index}' and sub-array length {length} exceed the bounds of the array [0, {upperBound}]");
       }
 
       T[] result = new T[length];
 
-      for (int i = index; i < length; i++)
+      for (int i = index; i-index < length; i++)
       {
         result[i - index] = array[i];
       }
@@ -169,11 +169,11 @@ namespace ArrayHelper
       return sortedArray;
     }
 
-    public static T[] Sum<T>(T[] array1, T[] array2, ISumCalculator<T> sumCalculator)
+    public static T[] Sum<T>(T[] array1, T[] array2, ISumCalculator<T> sumCalculator = null)
     {
       if (sumCalculator == null)
       {
-        sumCalculator = new KnownTypesSumCalculator<T>();
+        sumCalculator = new DynamicSumCalculator<T>();
       }
 
       if (array1 == null)
@@ -199,6 +199,63 @@ namespace ArrayHelper
       }
 
       return result;
+    }
+
+    public static U[] Convert<T, U>(T[] array)
+    {
+      T[] nonConvertibleValues;
+      return ArrayHelper.Convert<T, U>(array, null, out nonConvertibleValues);
+    }
+
+    public static U[] Convert<T, U>(T[] array, ICustomConverter<T, U> converter)
+    {
+      T[] nonConvertibleValues;
+      return ArrayHelper.Convert<T, U>(array, converter, out nonConvertibleValues);
+    }
+
+    public static U[] Convert<T, U>(T[] array, out T[] nonConvertibleValues)
+    {
+      return ArrayHelper.Convert<T, U>(array, null, out nonConvertibleValues);
+    }
+
+    public static U[] Convert<T, U>(T[] array, ICustomConverter<T, U> converter, out T[] nonConvertibleValues)
+    {
+      nonConvertibleValues = new T[0];
+
+      if ((array == null) || (array.Length == 0))
+      {
+        return new U[0];
+      }
+
+      if(converter == null)
+      {
+        converter = new CustomConverter<T, U>();
+      }
+
+      if(!converter.CanConvertBetweenTypes())
+      {
+        return new U[0];
+      }
+
+      var convertedValues = new List<U>();
+      var failConvertValues = new List<T>();
+      for (int i = 0; i< array.Length; i++)
+      {
+        T item = array[i];
+        U convertedItem;
+        if(converter.TryConvertValue(item, out convertedItem))
+        {
+          convertedValues.Add(convertedItem);
+        }
+        else
+        {
+          failConvertValues.Add(item);
+        }
+      }
+
+      nonConvertibleValues = failConvertValues.ToArray();
+
+      return convertedValues.ToArray();
     }
   }
 }
