@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ChatAppWithEvents
+﻿namespace ChatAppWithEvents
 {
   public interface IChatServer
   {
-    void HandleConnectRequest(IChatParticipant client);
+    void HandleConnectRequest<T>(T client)
+      where T: IChatParticipant, IChatMessageEmitter, IChatMessageHandler;
 
-    void HandleDisconnectRequest(IChatParticipant client);
+    void HandleDisconnectRequest<T>(T client)
+      where T: IChatParticipant, IChatMessageEmitter, IChatMessageHandler;
   }
 }

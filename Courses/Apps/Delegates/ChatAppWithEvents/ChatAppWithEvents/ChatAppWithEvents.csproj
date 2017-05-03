@@ -46,6 +46,10 @@
     <Compile Include="ChatMessageType.cs" />
     <Compile Include="ChatParticipant.cs" />
     <Compile Include="ChatServer.cs" />
+    <Compile Include="ChatServer.handle-disconnect.cs" />
+    <Compile Include="ChatServer.handle-msg-routing.cs" />
+    <Compile Include="ChatServer.handle-connect.cs" />
+    <Compile Include="ChatServer.nested-types.ChatClientWrapper.cs" />
     <Compile Include="IChatMessageHandler.cs" />
     <Compile Include="IChatParticipant.cs" />
     <Compile Include="IChatServer.cs" />
