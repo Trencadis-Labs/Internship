@@ -45,7 +45,13 @@
     <Compile Include="AttendedUniversity.cs" />
     <Compile Include="ConsoleHelper.cs" />
     <Compile Include="Course.cs" />
-    <Compile Include="DataSet.cs" />
+    <Compile Include="DataSet.base-members.cs" />
+    <Compile Include="ExercisesImplementation.cs" />
+    <Compile Include="DataSet.helpers-courses.cs" />
+    <Compile Include="DataSet.helpers-persons-and-students.cs" />
+    <Compile Include="DataSet.helpers-universities.cs" />
+    <Compile Include="DataSet.initialization.cs" />
+    <Compile Include="DataSet.nested-types.cs" />
     <Compile Include="Person.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -21,7 +21,7 @@ namespace LINQExercises
         throw new ArgumentException($"The semester of study (passed value={semesterOfStudy}) must be a valid semester value (1 or 2)");
       }
 
-      this.Id = UniqueIds.GetUniqueId<Course>();
+      this.Id = UniqueIds.GenerateUniqueId<Course>();
       this.UniversityId = universityId;
       this.Title = title;
       this.YearOfStudy = yearOfStudy;

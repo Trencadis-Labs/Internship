@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 
 namespace LINQExercises
 {
@@ -7,47 +6,26 @@ namespace LINQExercises
   {
     private static void AllPersonsBornInRange(DataSet ds, DateTime startDate, DateTime endDate)
     {
-      var query = ds.Persons.Where(p => (p.DateOfBirth >= startDate) && (p.DateOfBirth <= endDate));
-
-      ConsoleHelper.WriteHeadingWithAction(
-        $"Persons born between '{startDate}' and '{endDate}'",
-        () =>
-        {
-          foreach (var person in query)
-          {
-            Console.WriteLine($"#{person.Id} - {person.FirstName} {person.LastName} - {person.DateOfBirth}");
-          }
-        });
+      ConsoleHelper.WriteSectionForQuery(
+        $"Persons born between '{startDate:yyyy-MM-dd}' and '{endDate:yyyy-MM-dd}'",
+        ds.AllPersonsBornInRange(startDate, endDate),
+        person => Console.WriteLine($"#{person.Id} - {person.FirstName} {person.LastName} - {person.DateOfBirth}"));
     }
 
     private static void AllPersonsWhichAreStudents(DataSet ds)
     {
-      var query = ds.Persons.Where(p => ds.Students.Any(s => p.Id == s.Id));
-
-      ConsoleHelper.WriteHeadingWithAction(
-        $"Persons which are also students",
-        () =>
-        {
-          foreach (var person in query)
-          {
-            Console.WriteLine($"#{person.Id} - {person.FirstName} {person.LastName}");
-          }
-        });
+      ConsoleHelper.WriteSectionForQuery(
+        "Persons which are also students",
+        ds.AllPersonsWhichAreStudents(),
+        person => Console.WriteLine($"#{person.Id} - {person.FirstName} {person.LastName}"));
     }
 
     private static void AllPersonsWhichAreNotStudents(DataSet ds)
     {
-      var query = ds.Persons.Where(p => !ds.Students.Any(s => p.Id == s.Id));
-
-      ConsoleHelper.WriteHeadingWithAction(
-        $"Persons which are NOT students",
-        () =>
-        {
-          foreach (var person in query)
-          {
-            Console.WriteLine($"#{person.Id} - {person.FirstName} {person.LastName}");
-          }
-        });
+      ConsoleHelper.WriteSectionForQuery(
+        "Persons which are NOT students",
+        ds.AllPersonsWhichAreNotStudents(),
+        person => Console.WriteLine($"#{person.Id} - {person.FirstName} {person.LastName}"));
     }
 
     static void Main(string[] args)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace LINQExercises
 {
@@ -17,11 +18,35 @@ namespace LINQExercises
       Console.WriteLine();
     }
 
-    public static void WriteHeadingWithAction(string headingText, Action contentAction)
+    public static void WriteSectionWithAction(string headingText, Action contentAction)
     {
       WriteHeadingStart(headingText);
 
       contentAction?.Invoke();
+
+      WriteHeadingEnd();
+    }
+
+    public static void WriteSectionForQuery<T>(string headingText, IEnumerable<T> queryData, Action<T> elementAction)
+    {
+      WriteHeadingStart(headingText);
+
+      if(queryData != null)
+      {
+        foreach(var element in queryData)
+        {
+          elementAction?.Invoke(element);
+        }
+      }
+
+      WriteHeadingEnd();
+    }
+
+    public static void WriteSectionForData<T>(string headingText, T data, Action<T> dataAction)
+    {
+      WriteHeadingStart(headingText);
+
+      dataAction?.Invoke(data);
 
       WriteHeadingEnd();
     }

@@ -67,12 +67,12 @@ namespace LINQExercises
       uniqueIDs[type].Add(id, true);
     }
 
-    public static int GetUniqueId<T>()
+    public static int GenerateUniqueId<T>()
     {
-      return UniqueIds.GetUniqueId(typeof(T));
+      return UniqueIds.GenerateUniqueId(typeof(T));
     }
 
-    public static int GetUniqueId(Type type)
+    public static int GenerateUniqueId(Type type)
     {
       if (type == null)
       {

@@ -11,7 +11,7 @@ namespace LINQExercises
         throw new ArgumentNullException(nameof(name));
       }
 
-      this.Id = UniqueIds.GetUniqueId<University>();
+      this.Id = UniqueIds.GenerateUniqueId<University>();
       this.Name = name;
       this.Address = address;
     }

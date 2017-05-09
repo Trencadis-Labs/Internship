@@ -6,7 +6,7 @@ namespace LINQExercises
   {
     public Person(string firstName, string lastName, DateTime dateOfBirth)
       : this(
-        id: UniqueIds.GetUniqueId<Person>(),
+        id: UniqueIds.GenerateUniqueId<Person>(),
         firstName: firstName,
         lastName: lastName,
         dateOfBirth: dateOfBirth)

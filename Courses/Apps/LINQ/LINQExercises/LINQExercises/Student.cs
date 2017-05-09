@@ -13,7 +13,7 @@ namespace LINQExercises
       DateTime dateOfBirth,
       IEnumerable<AttendedUniversity> attendedUniversities = null)
       : this(
-          id: UniqueIds.GetUniqueId<Student>(),
+          id: UniqueIds.GenerateUniqueId<Student>(),
           firstName: firstName,
           lastName: lastName,
           dateOfBirth: dateOfBirth)
