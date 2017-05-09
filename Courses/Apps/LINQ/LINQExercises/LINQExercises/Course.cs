@@ -4,7 +4,7 @@ namespace LINQExercises
 {
   public class Course
   {
-    public Course(int id, int universityId, string title, int yearOfStudy, int semesterOfStudy)
+    public Course(int universityId, string title, int yearOfStudy, int semesterOfStudy)
     {
       if (string.IsNullOrWhiteSpace(title))
       {
@@ -21,9 +21,7 @@ namespace LINQExercises
         throw new ArgumentException($"The semester of study (passed value={semesterOfStudy}) must be a valid semester value (1 or 2)");
       }
 
-      UniqueIds.UseUniqueId<Course>(id);
-
-      this.Id = id;
+      this.Id = UniqueIds.GetUniqueId<Course>();
       this.UniversityId = universityId;
       this.Title = title;
       this.YearOfStudy = yearOfStudy;

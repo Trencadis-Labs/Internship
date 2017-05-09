@@ -8,12 +8,26 @@ namespace LINQExercises
     private readonly List<AttendedUniversity> attendedUniversities = new List<AttendedUniversity>();
 
     public Student(
+      string firstName,
+      string lastName,
+      DateTime dateOfBirth,
+      IEnumerable<AttendedUniversity> attendedUniversities = null)
+      : this(
+          id: UniqueIds.GetUniqueId<Student>(),
+          firstName: firstName,
+          lastName: lastName,
+          dateOfBirth: dateOfBirth)
+    {
+      
+    }
+
+    private Student(
       int id,
       string firstName,
       string lastName,
       DateTime dateOfBirth,
       IEnumerable<AttendedUniversity> attendedUniversities = null)
-      : base(id, firstName, lastName, dateOfBirth)
+      : base(id: id, firstName: firstName, lastName: lastName, dateOfBirth: dateOfBirth)
     {
       if (attendedUniversities != null)
       {
@@ -37,6 +51,16 @@ namespace LINQExercises
       }
 
       return this;
+    }
+
+    public static Student FromPerson(Person p, IEnumerable<AttendedUniversity> attendedUniversities = null)
+    {
+      return new Student(
+        id: p.Id,
+        firstName: p.FirstName,
+        lastName: p.LastName,
+        dateOfBirth: p.DateOfBirth,
+        attendedUniversities: attendedUniversities);
     }
   }
 }

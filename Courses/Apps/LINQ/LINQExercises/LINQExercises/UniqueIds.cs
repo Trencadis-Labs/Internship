@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LINQExercises
 {
@@ -64,6 +65,34 @@ namespace LINQExercises
       }
 
       uniqueIDs[type].Add(id, true);
+    }
+
+    public static int GetUniqueId<T>()
+    {
+      return UniqueIds.GetUniqueId(typeof(T));
+    }
+
+    public static int GetUniqueId(Type type)
+    {
+      if (type == null)
+      {
+        throw new ArgumentNullException(nameof(type));
+      }
+
+      if (!uniqueIDs.ContainsKey(type))
+      {
+        uniqueIDs.Add(type, new Dictionary<int, bool>());
+      }
+
+      int nextId = uniqueIDs[type].Keys.Count > 0 
+                    ?
+                    uniqueIDs[type].Keys.Max() + 1
+                    :
+                    1;
+
+      UniqueIds.UseUniqueId(nextId, type);
+
+      return nextId;
     }
   }
 }

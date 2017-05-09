@@ -6,6 +6,19 @@ namespace LINQExercises
 {
   public class DataSet
   {
+    private class CourseTitleAndGrade
+    {
+      public CourseTitleAndGrade(string courseTitle, float grade)
+      {
+        this.CourseTitle = courseTitle;
+        this.Grade = grade;
+      }
+
+      public string CourseTitle { get; private set; }
+
+      public float Grade { get; private set; }
+    }
+
     private readonly List<Person> persons = new List<Person>();
     private readonly List<Course> courses = new List<Course>();
     private readonly List<University> universities = new List<University>();
@@ -21,6 +34,25 @@ namespace LINQExercises
       this.universities.AddRange(universities);
     }
 
+    private int GetUniversityId(Predicate<University> universityPredicate)
+    {
+      if (universityPredicate == null)
+      {
+        throw new ArgumentNullException(nameof(universityPredicate));
+      }
+
+      var id = this.universities.First(u => universityPredicate(u)).Id;
+
+      return id;
+    }
+
+    private int GetUniversityIdByName(string universityName)
+    {
+      return this.GetUniversityId(univ => string.Equals(univ.Name, universityName, StringComparison.OrdinalIgnoreCase));
+    }
+
+
+
     private void InitializeCourses(params Course[] courses)
     {
       if (courses == null)
@@ -29,6 +61,28 @@ namespace LINQExercises
       }
 
       this.courses.AddRange(courses);
+    }
+
+    private int GetCourseId(Predicate<Course> coursePredicate)
+    {
+      if (coursePredicate == null)
+      {
+        throw new ArgumentNullException(nameof(coursePredicate));
+      }
+
+      var id = this.courses.First(u => coursePredicate(u)).Id;
+
+      return id;
+    }
+
+    private int GetCourseIdByTitleAndUniversityName(string title, string universityName)
+    {
+      int universityId = this.GetUniversityIdByName(universityName);
+
+      return this.GetCourseId(
+        c => string.Equals(c.Title, title, StringComparison.OrdinalIgnoreCase) &&
+             (c.UniversityId == universityId)
+      );
     }
 
     private void InitializePersons(params Person[] persons)
@@ -46,7 +100,7 @@ namespace LINQExercises
       Predicate<University> universityPredicate,
       DateTime registrationDate,
       DateTime? graduationDate,
-      params TranscriptOfGradeEntry[] grades)
+      params CourseTitleAndGrade[] coursesAndGrades)
     {
       if (personPredicate == null)
       {
@@ -78,16 +132,18 @@ namespace LINQExercises
         thePerson.Id,
         registrationDate,
         graduationDate,
-        grades);
+        coursesAndGrades.Select(cg => new TranscriptOfGradeEntry(
+          courseId: this.GetCourseIdByTitleAndUniversityName(
+            title: cg.CourseTitle,
+            universityName: theUniversity.Name),
+          grade: cg.Grade)));
 
       if (theStudent == null)
       {
         // new student
-        var newStudent = new Student(
-          thePerson.Id,
-          thePerson.FirstName,
-          thePerson.LastName,
-          thePerson.DateOfBirth,
+
+        var newStudent = Student.FromPerson(
+          thePerson,
           new[] { attendedUniversity });
 
         this.students.Add(newStudent);
@@ -102,34 +158,57 @@ namespace LINQExercises
     public void Initialize()
     {
       this.InitializePersons(
-        new Person(1, "John", "Doe", new DateTime(1975, 3, 24)),
-        new Person(2, "Molly", "Joe", new DateTime(1985, 5, 9)),
-        new Person(3, "Rachel", "Ray", new DateTime(1995, 7, 12)),
-        new Person(4, "Brad", "Pitt", new DateTime(1990, 10, 21))
+        new Person("John", "Doe", new DateTime(1975, 3, 24)),
+        new Person("Molly", "Joe", new DateTime(1985, 5, 9)),
+        new Person("Rachel", "Ray", new DateTime(1995, 7, 12)),
+        new Person("Brad", "Pitt", new DateTime(1990, 10, 21))
       );
 
       this.InitializeUniversities(
-        new University(1, "University of Oradea", "str. Armatei Romane, nr. 1, Oradea, Romania"),
-        new University(2, "UBB", "str. Universitatii 7-9, Cluj-Napoca")
+        new University("University of Oradea", "str. Armatei Romane, nr. 1, Oradea, Romania"),
+        new University("UBB", "str. Universitatii 7-9, Cluj-Napoca")
       );
 
       this.InitializeCourses(
         // Courses for 'University of Oradea'
-        new Course(id: 1, universityId: 1, title: "Programare orientata pe Obiecte", yearOfStudy: 1, semesterOfStudy: 1),
-        new Course(id: 2, universityId: 1, title: "Grafica pe Calculator", yearOfStudy: 1, semesterOfStudy: 2),
+        new Course(
+          universityId: this.GetUniversityIdByName("University of Oradea"),
+          title: "Programare orientata pe Obiecte",
+          yearOfStudy: 1,
+          semesterOfStudy: 1),
+
+        new Course(
+          universityId: this.GetUniversityIdByName("University of Oradea"),
+          title: "Grafica pe Calculator",
+          yearOfStudy: 1,
+          semesterOfStudy: 2),
 
         // Courses for 'UBB'
-        new Course(id: 3, universityId: 2, title: "Programare orientata pe Obiecte", yearOfStudy: 1, semesterOfStudy: 1),
-        new Course(id: 4, universityId: 2, title: "Algebra", yearOfStudy: 1, semesterOfStudy: 2)
+        new Course(
+          universityId: this.GetUniversityIdByName("UBB"),
+          title: "Programare orientata pe Obiecte",
+          yearOfStudy: 1,
+          semesterOfStudy: 1),
+
+        new Course(
+          universityId: this.GetUniversityIdByName("UBB"),
+          title: "Algebra",
+          yearOfStudy: 1,
+          semesterOfStudy: 2)
       );
+
 
       this.SetupStudent(
         Person.WithName("John", "Doe"),
         University.WithName("University of Oradea"),
         new DateTime(1990, 10, 1),
         new DateTime(1995, 7, 1),
-        new TranscriptOfGradeEntry(courseId: 1, grade: 9F),
-        new TranscriptOfGradeEntry(courseId: 2, grade: 10F)
+        new CourseTitleAndGrade(
+          "Programare orientata pe Obiecte",
+          9F),
+        new CourseTitleAndGrade(
+          "Grafica pe Calculator",
+          grade: 10F)
       );
 
       this.SetupStudent(
@@ -137,17 +216,23 @@ namespace LINQExercises
         University.WithName("UBB"),
         new DateTime(1993, 10, 1),
         new DateTime(1996, 7, 1),
-        new TranscriptOfGradeEntry(courseId: 3, grade: 7F),
-        new TranscriptOfGradeEntry(courseId: 4, grade: 9.5F)
+        new CourseTitleAndGrade(
+          "Programare orientata pe Obiecte", 
+          7F),
+        new CourseTitleAndGrade(
+          "Algebra",
+          9.5F)
       );
     }
 
-    public IEnumerable<Person> Persons {  get { return this.persons;  } }
+    public IEnumerable<Person> Persons { get { return this.persons; } }
 
     public IEnumerable<Student> Students { get { return this.students; } }
 
     public IEnumerable<Course> Courses { get { return this.courses; } }
 
     public IEnumerable<University> Universities { get { return this.universities; } }
+
+
   }
 }

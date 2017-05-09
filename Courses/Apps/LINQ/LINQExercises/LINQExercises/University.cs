@@ -4,16 +4,14 @@ namespace LINQExercises
 {
   public class University
   {
-    public University(int id, string name, string address)
+    public University(string name, string address)
     {
       if (string.IsNullOrWhiteSpace(name))
       {
         throw new ArgumentNullException(nameof(name));
       }
 
-      UniqueIds.UseUniqueId<University>(id);
-
-      this.Id = id;
+      this.Id = UniqueIds.GetUniqueId<University>();
       this.Name = name;
       this.Address = address;
     }

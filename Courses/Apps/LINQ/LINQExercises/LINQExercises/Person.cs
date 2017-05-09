@@ -1,11 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace LINQExercises
 {
   public class Person
   {
-    public Person(int id, string firstName, string lastName, DateTime dateOfBirth)
+    public Person(string firstName, string lastName, DateTime dateOfBirth)
+      : this(
+        id: UniqueIds.GetUniqueId<Person>(),
+        firstName: firstName,
+        lastName: lastName,
+        dateOfBirth: dateOfBirth)
+    {
+
+    }
+
+    protected Person(int id, string firstName, string lastName, DateTime dateOfBirth)
     {
       if (string.IsNullOrWhiteSpace(firstName))
       {
@@ -23,8 +32,6 @@ namespace LINQExercises
       {
         throw new ArgumentException($"Person cannot be born in the future, year-of-birth is '{dateOfBirth.Year}', current-year is {today.Year}");
       }
-
-      UniqueIds.UseUniqueId(id, this.GetType());
 
       this.Id = id;
       this.FirstName = firstName;
