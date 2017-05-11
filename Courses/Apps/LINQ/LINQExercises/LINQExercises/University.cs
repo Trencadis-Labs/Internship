@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace LINQExercises
 {
@@ -30,6 +31,14 @@ namespace LINQExercises
     public static Predicate<University> WithId(int id)
     {
       return (u) => (u != null) && (u.Id == id);
+    }
+
+    public static Predicate<University> MultipleUniversitiesByName(params string[] universityNames)
+    {
+      return (u) => (u != null) && 
+                    (universityNames != null) ? universityNames.Any(universityName => string.Equals(u.Name, universityName, StringComparison.OrdinalIgnoreCase))
+                                                :
+                                                false;
     }
   }
 }

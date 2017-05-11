@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LINQExercises
 {
@@ -27,26 +28,32 @@ namespace LINQExercises
       WriteHeadingEnd();
     }
 
-    public static void WriteSectionForQuery<T>(string headingText, IEnumerable<T> queryData, Action<T> elementAction)
+    public static void WriteSectionForCollection<T>(string headingText, IEnumerable<T> collection, Action<T> elementAction, Action nullOrEmptyCollectionAction = null)
     {
       WriteHeadingStart(headingText);
 
-      if(queryData != null)
+      var collectionArray = collection?.ToArray();
+
+      if ((collectionArray != null) && (collectionArray.Length > 0))
       {
-        foreach(var element in queryData)
+        foreach(var element in collectionArray)
         {
           elementAction?.Invoke(element);
         }
+      }
+      else
+      {
+        nullOrEmptyCollectionAction?.Invoke();
       }
 
       WriteHeadingEnd();
     }
 
-    public static void WriteSectionForData<T>(string headingText, T data, Action<T> dataAction)
+    public static void WriteSectionForData<T>(string headingText, T data, Action<T> action)
     {
       WriteHeadingStart(headingText);
 
-      dataAction?.Invoke(data);
+      action?.Invoke(data);
 
       WriteHeadingEnd();
     }

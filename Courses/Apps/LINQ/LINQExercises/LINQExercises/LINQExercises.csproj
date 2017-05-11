@@ -55,6 +55,9 @@
     <Compile Include="Person.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Results.attended-courses.cs" />
+    <Compile Include="Results.student-with-graduated-universities.cs" />
+    <Compile Include="Results.university-with-students.cs" />
     <Compile Include="Student.cs" />
     <Compile Include="TranscriptOfGradeEntry.cs" />
     <Compile Include="UniqueIds.cs" />
