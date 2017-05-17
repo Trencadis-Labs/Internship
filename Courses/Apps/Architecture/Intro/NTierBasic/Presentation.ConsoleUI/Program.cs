@@ -6,7 +6,9 @@ namespace Presentation.ConsoleUI
   {
     static void Main(string[] args)
     {
-      Console.WriteLine("Hello World!");
+      PersonUi ui = new PersonUi(10);
+
+      ui.Start();
     }
   }
 }
