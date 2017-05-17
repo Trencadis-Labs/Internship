@@ -21,7 +21,8 @@ namespace LINQExercises
 
       this.InitializeUniversities(
         new University("University of Oradea", "str. Armatei Romane, nr. 1, Oradea, Romania"),
-        new University("UBB", "str. Universitatii 7-9, Cluj-Napoca")
+        new University("UBB", "str. Universitatii 7-9, Cluj-Napoca"),
+        new University("Universitatea Tehnica Cluj", "str. Memorandumului 28, Cluj-Napoca")
       );
 
       #endregion
@@ -51,7 +52,31 @@ namespace LINQExercises
           universityId: this.GetUniversityIdByName("UBB"),
           title: "Algebra",
           yearOfStudy: 1,
-          semesterOfStudy: 2)
+          semesterOfStudy: 2),
+        new Course(
+          universityId: this.GetUniversityIdByName("UBB"),
+          title: "Baze de date",
+          yearOfStudy: 2,
+          semesterOfStudy: 1),
+
+        // Courses for 'Universitatea Tehnica Cluj'
+        new Course(
+          universityId: this.GetUniversityIdByName("Universitatea Tehnica Cluj"),
+          title: "Programare orientata pe Obiecte",
+          yearOfStudy: 1,
+          semesterOfStudy: 1),
+
+        new Course(
+          universityId: this.GetUniversityIdByName("Universitatea Tehnica Cluj"),
+          title: "Analiza",
+          yearOfStudy: 1,
+          semesterOfStudy: 2),
+
+        new Course(
+          universityId: this.GetUniversityIdByName("Universitatea Tehnica Cluj"),
+          title: "Structuri de date si tehnici de programare",
+          yearOfStudy: 2,
+          semesterOfStudy: 1)
       );
 
       #endregion
@@ -86,6 +111,24 @@ namespace LINQExercises
           new CourseTitleAndGrade(
             "Algebra",
             9.5F)
+        });
+
+      this.SetupStudent(
+        personPredicate: Person.WithName("Molly", "Joe"),
+        universityPredicate: University.WithName("Universitatea Tehnica Cluj"),
+        registrationDate: new DateTime(1993, 10, 1),
+        graduationDate: new DateTime(1996, 7, 1),
+        coursesAndGrades: new[]
+        {
+          new CourseTitleAndGrade(
+            "Programare orientata pe Obiecte",
+            9F),
+          new CourseTitleAndGrade(
+            "Analiza",
+            9F),
+           new CourseTitleAndGrade(
+            "Structuri de date si tehnici de programare",
+            10F)
         });
 
       #endregion
