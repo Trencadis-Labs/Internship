@@ -1,50 +1,56 @@
-﻿using System;
+﻿using Models.Sorting;
+using System;
 
 namespace Presentation.ConsoleUI.Views
 {
   public class GoToFirstPageEventArgs : EventArgs
   {
-    public GoToFirstPageEventArgs()
-      : base()
-    {
-
-    }
   }
 
   public class GoToLastPageEventArgs : EventArgs
   {
-    public GoToLastPageEventArgs()
-      : base()
-    {
-
-    }
   }
 
   public class GoToPrevPageEventArgs : EventArgs
   {
-    public GoToPrevPageEventArgs()
-      : base()
-    {
-
-    }
   }
 
   public class GoToNextPageEventArgs : EventArgs
   {
-    public GoToNextPageEventArgs()
-      : base()
-    {
+  }
 
+  public abstract class SortEventArgs<TSort> : EventArgs
+    where TSort : struct
+  {
+    public SortEventArgs(TSort criteria, SortDirection sortDirection)
+    {
+      this.SortCriteria = criteria;
+      this.SortDirection = sortDirection;
+    }
+
+    public TSort SortCriteria
+    {
+      get;
+      private set;
+    }
+
+    public SortDirection SortDirection
+    {
+      get;
+      private set;
+    }
+  }
+
+  public class SortByPersonPropertiesEventArgs : SortEventArgs<PersonSortCriteria>
+  {
+    public SortByPersonPropertiesEventArgs(PersonSortCriteria sortCriteria, SortDirection sortDirection)
+      : base(sortCriteria, sortDirection)
+    {
     }
   }
 
   public class ExitEventArgs : EventArgs
   {
-    public ExitEventArgs()
-      : base()
-    {
-
-    }
   }
 
   public class UnknownCommandEventArgs : EventArgs

@@ -6,7 +6,7 @@ namespace Presentation.ConsoleUI
   {
     static void Main(string[] args)
     {
-      PersonUi ui = new PersonUi(10);
+      PersonUi ui = new PersonUi(20);
 
       ui.Start();
     }

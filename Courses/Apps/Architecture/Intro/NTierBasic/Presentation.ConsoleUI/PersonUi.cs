@@ -1,5 +1,6 @@
 ﻿using BusinessLogic;
 using Models;
+using Models.Core;
 using Models.Extensions;
 using Models.Paging;
 using Models.Sorting;
@@ -14,7 +15,7 @@ namespace Presentation.ConsoleUI
   {
     private readonly int pageSize;
 
-    private readonly IView<PagedCollection<Person>> personListingView;
+    private readonly IView<SortedPagedCollection<Person, PersonSortCriteria>> personListingView;
 
     private readonly IEventPublishView<SortedPagedCollection<Person, PersonSortCriteria>> menuView;
 
@@ -57,32 +58,21 @@ namespace Presentation.ConsoleUI
 
     private void MenuView_OnViewEvent(object sender, EventArgs e)
     {
-      if (e.GetType() == typeof(GoToFirstPageEventArgs))
-      {
-        this.OnGoToFirstPageEvent();
-      }
-      else if (e.GetType() == typeof(GoToPrevPageEventArgs))
-      {
-        this.OnGoToPrevPageEvent();
-      }
-      else if (e.GetType() == typeof(GoToNextPageEventArgs))
-      {
-        this.OnGoToNextPageEvent();
-      }
-      else if (e.GetType() == typeof(GoToLastPageEventArgs))
-      {
-        this.OnGoToLastPageEvent();
-      }
-      else if (e.GetType() == typeof(ExitEventArgs))
-      {
-        this.OnExitEvent();
-      }
-      else if (e.GetType() == typeof(UnknownCommandEventArgs))
-      {
-        var evArgs = e as UnknownCommandEventArgs;
-
-        this.OnUnknownEvent(evArgs?.Command);
-      }
+      TypeSwitch.On(e.GetType())
+          // paging
+          .Case<GoToFirstPageEventArgs>(() => this.OnGoToFirstPageEvent())
+          .Case<GoToPrevPageEventArgs>(() => this.OnGoToPrevPageEvent())
+          .Case<GoToNextPageEventArgs>(() => this.OnGoToNextPageEvent())
+          .Case<GoToLastPageEventArgs>(() => this.OnGoToLastPageEvent())
+          // sorting
+          .Case<SortByPersonPropertiesEventArgs>(() => this.OnSortEvent(
+                                                        e.As<SortByPersonPropertiesEventArgs>().SortCriteria,
+                                                        e.As<SortByPersonPropertiesEventArgs>().SortDirection))
+          // exit
+          .Case<ExitEventArgs>(() => this.OnExitEvent())
+          // unknwon
+          .Case<UnknownCommandEventArgs>(() => this.OnUnknownEvent(e.As<UnknownCommandEventArgs>()?.Command))
+          .Evaluate();
     }
 
     private void OnGoToFirstPageEvent()
@@ -94,7 +84,10 @@ namespace Presentation.ConsoleUI
 
     private void OnGoToPrevPageEvent()
     {
-      this.pageIndex--;
+      if (this.pageIndex > 0)
+      {
+        this.pageIndex--;
+      }
 
       this.LoadDataForCurrentPage();
     }
@@ -111,6 +104,14 @@ namespace Presentation.ConsoleUI
       this.pageIndex = this.data.GetLastPageIndex();
 
       this.LoadDataForCurrentPage();
+    }
+
+    private void OnSortEvent(PersonSortCriteria criteria, SortDirection sortDirection)
+    {
+      this.sortCriteria = criteria;
+      this.sortDirection = sortDirection;
+
+      LoadDataForCurrentPage();
     }
 
     private void OnExitEvent()
@@ -131,9 +132,11 @@ namespace Presentation.ConsoleUI
 
       this.data = personBO.GetPersonsPaged(this.pageIndex, this.pageSize, this.sortCriteria, this.sortDirection);
 
-      if (this.pageIndex == int.MaxValue)
+      if(this.pageIndex > data.GetLastPageIndex())
       {
-        this.pageIndex = this.data.TotalPagesCount - 1;
+        this.pageIndex = data.GetLastPageIndex();
+
+        this.data = personBO.GetPersonsPaged(this.pageIndex, this.pageSize, this.sortCriteria, this.sortDirection);
       }
 
       this.personListingView.Render(this.data);

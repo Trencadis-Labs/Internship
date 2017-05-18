@@ -11,7 +11,7 @@ namespace DataAccess.InMemory
 {
   public class InMemoryPersonRepository : IPersonRepository
   {
-    private readonly List<Person> personsCollection = new List<Person>();
+    private static readonly List<Person> personsCollection = new List<Person>();
 
     public InMemoryPersonRepository()
       : this(InMemoryPersonRepository.DefaultDataSetInitialization)
@@ -21,19 +21,23 @@ namespace DataAccess.InMemory
 
     public InMemoryPersonRepository(Func<IEnumerable<Person>> dataSetInitialization)
     {
-      if (dataSetInitialization != null)
+      if (InMemoryPersonRepository.personsCollection.Count == 0)
       {
-        var initialSet = dataSetInitialization();
-        if (initialSet != null)
+        if (dataSetInitialization != null)
         {
-          this.personsCollection.AddRange(initialSet);
+          var initialSet = dataSetInitialization();
+
+          if (initialSet != null)
+          {
+            InMemoryPersonRepository.personsCollection.AddRange(initialSet);
+          }
         }
       }
     }
 
     public SortedPagedCollection<Person, PersonSortCriteria> GetPersonsPaged(int pageIndex, int pageSize, PersonSortCriteria sortCriteria, SortDirection sortDirection)
     {
-      IEnumerable<Person> query = this.personsCollection;
+      IEnumerable<Person> query = InMemoryPersonRepository.personsCollection;
 
       switch (sortCriteria)
       {
