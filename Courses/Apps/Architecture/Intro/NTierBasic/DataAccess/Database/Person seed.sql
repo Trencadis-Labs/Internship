@@ -15,4 +15,5 @@ BEGIN
         'Db Generated', 'Person' + CAST(@Counter + 1 as NVARCHAR(4)),   DATEADD(day, RAND(), @StartDate));
 
       SET @Counter = @Counter + 1;
+
 END;
