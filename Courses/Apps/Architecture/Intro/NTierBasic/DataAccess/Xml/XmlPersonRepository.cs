@@ -1,42 +1,56 @@
 ﻿using DataAccess.Abstractions;
 using Models;
+using Models.Extensions;
 using Models.Paging;
 using Models.Sorting;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Xml.Linq;
 
-namespace DataAccess.InMemory
+namespace DataAccess.Xml
 {
-  public class InMemoryPersonRepository : IPersonRepository
+  public class XmlPersonRepository : IPersonRepository
   {
-    private static readonly List<Person> personsCollection = new List<Person>();
+    private readonly XDocument xmlDocument;
 
-    public InMemoryPersonRepository()
-      : this(InMemoryPersonRepository.DefaultDataSetInitialization)
+    public XmlPersonRepository()
+      : this(@"D:\Trencadis\Github\Internship\Courses\Apps\Architecture\Intro\NTierBasic\DataAccess\Xml\Persons.xml")
     {
 
     }
 
-    public InMemoryPersonRepository(Func<IEnumerable<Person>> dataSetInitialization)
+    public XmlPersonRepository(string xmlPath)
     {
-      if (InMemoryPersonRepository.personsCollection.Count == 0)
+      if (string.IsNullOrWhiteSpace(xmlPath))
       {
-        if (dataSetInitialization != null)
-        {
-          var initialSet = dataSetInitialization();
-
-          if (initialSet != null)
-          {
-            InMemoryPersonRepository.personsCollection.AddRange(initialSet);
-          }
-        }
+        throw new ArgumentNullException($"{nameof(xmlPath)}");
       }
+
+      if (!File.Exists(xmlPath))
+      {
+        throw new FileNotFoundException($"XML file cannot be found at path '{xmlPath}'");
+      }
+
+      this.xmlDocument = XDocument.Load(xmlPath);
     }
 
     public SortedPagedCollection<Person, PersonSortCriteria> GetPersonsPaged(int pageIndex, int pageSize, PersonSortCriteria sortCriteria, SortDirection sortDirection)
     {
-      IEnumerable<Person> query = InMemoryPersonRepository.personsCollection;
+      IEnumerable<Person> query = from persElement in this.xmlDocument.Descendants("Person")
+                                  let dateOfBirthString = persElement.Element("DateOfBirth")?.Value
+                                  let dateOfBirthFormat = persElement.Element("DateOfBirth") != null ? 
+                                                            persElement.Element("DateOfBirth").Attribute("format")?.Value 
+                                                            : 
+                                                            ""
+                                  select new Person()
+                                  {
+                                    Id = int.Parse(persElement.Attribute("id").Value),
+                                    FirstName = persElement.Element("FirstName")?.Value,
+                                    LastName = persElement.Element("LastName")?.Value,
+                                    DateOfBirth = dateOfBirthString.ParseWithFormat(dateOfBirthFormat)
+                                  };
 
       switch (sortCriteria)
       {
@@ -103,30 +117,6 @@ namespace DataAccess.InMemory
       var data = query.Skip(pageIndex * pageSize).Take(pageSize);
 
       return new SortedPagedCollection<Person, PersonSortCriteria>(data, pageIndex, pageSize, totalRecordsCount, sortCriteria, sortDirection);
-    }
-
-    private static IEnumerable<Person> DefaultDataSetInitialization()
-    {
-      List<Person> persons = new List<Person>();
-      var randomGen = new Random();
-
-      for (int i = 0; i < 100; i++)
-      {
-        var person = new Person()
-        {
-          Id = i + 1,
-          FirstName = "Generated",
-          LastName = "Person " + (i + 1),
-          DateOfBirth = new DateTime(
-                          year: 1970 + randomGen.Next(0, 40),
-                          month: randomGen.Next(1, 12),
-                          day: randomGen.Next(1, 28))
-        };
-
-        persons.Add(person);
-      }
-
-      return persons;
     }
   }
 }

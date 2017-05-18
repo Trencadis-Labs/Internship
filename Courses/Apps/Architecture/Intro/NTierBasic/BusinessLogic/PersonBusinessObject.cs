@@ -1,5 +1,6 @@
 ﻿using DataAccess.Abstractions;
 using DataAccess.InMemory;
+using DataAccess.Xml;
 using Models;
 using Models.Paging;
 using Models.Sorting;
@@ -13,7 +14,8 @@ namespace BusinessLogic
 
     public PersonBusinessObject()
     {
-      this.personsRepository = new InMemoryPersonRepository();
+      // this.personsRepository = new InMemoryPersonRepository();
+      this.personsRepository = new XmlPersonRepository();
     }
 
     public SortedPagedCollection<Person, PersonSortCriteria> GetPersonsPaged(int pageIndex, int pageSize, PersonSortCriteria sortCriteria, SortDirection sortDirection)

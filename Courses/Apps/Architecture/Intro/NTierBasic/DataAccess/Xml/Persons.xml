@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Persons>
+  <Person id="1">
+    <FirstName>John</FirstName>
+    <LastName>Doe</LastName>
+    <DateOfBirth format="yyyy-MM-dd">1998-05-18</DateOfBirth>
+  </Person>
+  <Person id="2">
+    <FirstName>Abbey</FirstName>
+    <LastName>Edward</LastName>
+    <DateOfBirth format="dd-MM-yyyy">25-03-1975</DateOfBirth>
+  </Person>
+  <Person id="3">
+    <FirstName>Carson</FirstName>
+    <LastName>Stewart</LastName>
+    <DateOfBirth format="dd-MM-yyyy">17-10-2001</DateOfBirth>
+  </Person>
+</Persons>
