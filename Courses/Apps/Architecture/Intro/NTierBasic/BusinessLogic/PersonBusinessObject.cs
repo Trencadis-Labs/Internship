@@ -1,4 +1,5 @@
 ﻿using DataAccess.Abstractions;
+using DataAccess.Database;
 using DataAccess.InMemory;
 using DataAccess.Xml;
 using Models;
@@ -15,7 +16,8 @@ namespace BusinessLogic
     public PersonBusinessObject()
     {
       // this.personsRepository = new InMemoryPersonRepository();
-      this.personsRepository = new XmlPersonRepository();
+      // this.personsRepository = new XmlPersonRepository();
+      this.personsRepository = new DatabasePersonRepository(@"Server=FLORIN-PC\MSSQL2012;Database=PersonsDB;Trusted_Connection=True;");
     }
 
     public SortedPagedCollection<Person, PersonSortCriteria> GetPersonsPaged(int pageIndex, int pageSize, PersonSortCriteria sortCriteria, SortDirection sortDirection)
