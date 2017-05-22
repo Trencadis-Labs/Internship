@@ -1,7 +1,4 @@
 ﻿using DataAccess.Abstractions;
-using DataAccess.Database;
-using DataAccess.InMemory;
-using DataAccess.Xml;
 using Models;
 using Models.Paging;
 using Models.Sorting;
@@ -13,11 +10,14 @@ namespace BusinessLogic
   {
     private readonly IPersonRepository personsRepository;
 
-    public PersonBusinessObject()
+    public PersonBusinessObject(IPersonRepository personsRepository)
     {
-      // this.personsRepository = new InMemoryPersonRepository();
-      // this.personsRepository = new XmlPersonRepository();
-      this.personsRepository = new DatabasePersonRepository(@"Server=FLORIN-PC\MSSQL2012;Database=PersonsDB;Trusted_Connection=True;");
+      if (personsRepository == null)
+      {
+        throw new ArgumentNullException($"{nameof(personsRepository)}");
+      }
+
+      this.personsRepository = personsRepository;
     }
 
     public SortedPagedCollection<Person, PersonSortCriteria> GetPersonsPaged(int pageIndex, int pageSize, PersonSortCriteria sortCriteria, SortDirection sortDirection)

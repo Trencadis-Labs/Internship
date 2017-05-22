@@ -14,7 +14,12 @@ namespace DataAccess.Database
   {
     private readonly string connectionString;
 
-    public DatabasePersonRepository(string connectionString)
+    public DatabasePersonRepository(GlobalSettings settings)
+      : this(connectionString: settings?.RepositoriesConfig?.Database?.ConnectionString)
+    {
+    }
+
+    protected DatabasePersonRepository(string connectionString)
     {
       if (string.IsNullOrWhiteSpace(connectionString))
       {

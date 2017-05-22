@@ -1,4 +1,5 @@
 ﻿using BusinessLogic;
+using DataAccess.Abstractions;
 using Models;
 using Models.Core;
 using Models.Extensions;
@@ -6,7 +7,6 @@ using Models.Paging;
 using Models.Sorting;
 using Presentation.ConsoleUI.Views;
 using Presentation.ConsoleUI.Views.Abstractions;
-using Presentation.ConsoleUI.Views.Implementation;
 using System;
 
 namespace Presentation.ConsoleUI
@@ -14,6 +14,8 @@ namespace Presentation.ConsoleUI
   public class PersonUi
   {
     private readonly int pageSize;
+
+    private readonly IPersonRepository personRepository;
 
     private readonly IView<SortedPagedCollection<Person, PersonSortCriteria>> personListingView;
 
@@ -29,15 +31,47 @@ namespace Presentation.ConsoleUI
 
     private SortedPagedCollection<Person, PersonSortCriteria> data = null;
 
-    public PersonUi(int pageSize)
+    public PersonUi(
+      int pageSize,
+      IPersonRepository personRepository,
+      IView<SortedPagedCollection<Person, PersonSortCriteria>> personListingView,
+      IEventPublishView<SortedPagedCollection<Person, PersonSortCriteria>> menuView,
+      IView<string> unknownCommandView)
     {
-      this.personListingView = new PersonListingView();
+      if (pageSize <= 0)
+      {
+        throw new ArgumentException($"The value '{pageSize}' used for page size is invalid, it must be a strictly positive numeric value");
+      }
 
-      this.menuView = new MenuView();
+      if (personRepository == null)
+      {
+        throw new ArgumentNullException($"{nameof(personRepository)}");
+      }
 
-      this.unknownCommandView = new UnknownCommandView();
+      if (personListingView == null)
+      {
+        throw new ArgumentNullException($"{nameof(personListingView)}");
+      }
+
+      if (menuView == null)
+      {
+        throw new ArgumentNullException($"{nameof(menuView)}");
+      }
+
+      if (unknownCommandView == null)
+      {
+        throw new ArgumentNullException($"{nameof(unknownCommandView)}");
+      }
 
       this.pageSize = pageSize;
+
+      this.personRepository = personRepository;
+
+      this.personListingView = personListingView;
+
+      this.menuView = menuView;
+
+      this.unknownCommandView = unknownCommandView;
     }
 
     public void Start()
@@ -128,11 +162,11 @@ namespace Presentation.ConsoleUI
 
     private void LoadDataForCurrentPage()
     {
-      var personBO = new PersonBusinessObject();
+      var personBO = new PersonBusinessObject(this.personRepository);
 
       this.data = personBO.GetPersonsPaged(this.pageIndex, this.pageSize, this.sortCriteria, this.sortDirection);
 
-      if(this.pageIndex > data.GetLastPageIndex())
+      if (this.pageIndex > data.GetLastPageIndex())
       {
         this.pageIndex = data.GetLastPageIndex();
 

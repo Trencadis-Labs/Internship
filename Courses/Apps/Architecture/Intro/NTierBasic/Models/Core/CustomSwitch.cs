@@ -3,11 +3,45 @@ using System.Collections.Generic;
 
 namespace Models.Core
 {
-  public abstract class CustomSwitch<T>
+  public abstract class CustomSwitch<T> : CustomSwitch<T, object>
+  {
+    protected CustomSwitch(T on, Func<T, T, bool> comparison)
+      : base(on, comparison)
+    {
+    }
+
+    protected virtual void AddCase(T label, Action action)
+    {
+      this.AddCase(
+        label: label,
+        returnFunc: () => { action?.Invoke(); return null; });
+    }
+
+    protected void SetDefault(Action action)
+    {
+      this.SetDefault(
+        returnFunc: () => { action?.Invoke(); return null; });
+    }
+
+    private class CaseLabel
+    {
+      public CaseLabel(T label, Action action)
+      {
+        this.Label = label;
+        this.Action = action;
+      }
+
+      public T Label { get; private set; }
+
+      public Action Action { get; private set; }
+    }
+  }
+
+  public abstract class CustomSwitch<T, TResult>
   {
     private readonly List<CaseLabel> caseLabels = new List<CaseLabel>();
 
-    private Action defaultAction = null;
+    private Func<TResult> defaultFunc = null;
 
     private readonly T switchOn;
 
@@ -24,41 +58,52 @@ namespace Models.Core
       this.comparison = comparison;
     }
 
-    protected void AddCase(T label, Action action)
+    protected virtual void AddCase(T label, Func<TResult> returnFunc)
     {
-      this.caseLabels.Add(new CaseLabel(label, action));
+      this.caseLabels.Add(new CaseLabel(label, returnFunc));
     }
 
-    protected void SetDefault(Action action)
+    protected virtual void SetDefault(Func<TResult> returnFunc)
     {
-      this.defaultAction = action;
+      this.defaultFunc = returnFunc;
     }
 
-    public void Evaluate()
+    public TResult Evaluate()
     {
       foreach (var caseItem in this.caseLabels)
       {
         if (this.comparison(this.switchOn, caseItem.Label))
         {
-          caseItem.Action?.Invoke();
-          return;
+          var func = caseItem.ReturnFunc;
+          if (func != null)
+          {
+            return func.Invoke();
+          }
+
+          throw new InvalidOperationException();
         }
       }
 
-      this.defaultAction?.Invoke();
+      var defFunc = this.defaultFunc;
+      if (defFunc != null)
+      {
+        return defFunc.Invoke();
+      }
+
+      throw new InvalidOperationException();
     }
 
     private class CaseLabel
     {
-      public CaseLabel(T label, Action action)
+      public CaseLabel(T label, Func<TResult> returnFunc)
       {
         this.Label = label;
-        this.Action = action;
+        this.ReturnFunc = returnFunc;
       }
 
       public T Label { get; private set; }
 
-      public Action Action { get; private set; }
+      public Func<TResult> ReturnFunc { get; private set; }
     }
   }
 }

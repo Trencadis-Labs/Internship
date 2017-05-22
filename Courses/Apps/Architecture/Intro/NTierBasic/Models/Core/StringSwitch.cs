@@ -33,4 +33,49 @@ namespace Models.Core
       return new StringSwitch(on, stringComparison);
     }
   }
+
+  public class StringSwitch<TResult> : CustomSwitch<string, TResult>
+  {
+    private StringSwitch(string on, StringComparison stringComparison)
+     : base(on, (switchOn, caseLabel) => string.Equals(switchOn, caseLabel, stringComparison))
+    {
+    }
+
+    public StringSwitch<TResult> Case(string label, Func<TResult> returnFunc)
+    {
+      this.AddCase(label, returnFunc);
+
+      return this;
+    }
+
+    public StringSwitch<TResult> MultiCase(string[] labels, Func<TResult> returnFunc)
+    {
+      if (labels != null)
+      {
+        foreach (var label in labels)
+        {
+          this.AddCase(label, returnFunc);
+        }
+      }
+
+      return this;
+    }
+
+    public StringSwitch<TResult> Default(Func<TResult> returnFunc)
+    {
+      this.SetDefault(returnFunc);
+
+      return this;
+    }
+
+    public static StringSwitch<TResult> On(string on)
+    {
+      return new StringSwitch<TResult>(on, StringComparison.CurrentCulture);
+    }
+
+    public static StringSwitch<TResult> On(string on, StringComparison stringComparison)
+    {
+      return new StringSwitch<TResult>(on, stringComparison);
+    }
+  }
 }

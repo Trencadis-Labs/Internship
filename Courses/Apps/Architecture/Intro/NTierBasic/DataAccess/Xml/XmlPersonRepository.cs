@@ -15,8 +15,8 @@ namespace DataAccess.Xml
   {
     private readonly XDocument xmlDocument;
 
-    public XmlPersonRepository()
-      : this(@"D:\Trencadis\Github\Internship\Courses\Apps\Architecture\Intro\NTierBasic\DataAccess\Xml\Persons.xml")
+    public XmlPersonRepository(GlobalSettings settings)
+      : this(xmlPath: settings?.RepositoriesConfig?.Xml?.Path)
     {
 
     }
@@ -40,9 +40,9 @@ namespace DataAccess.Xml
     {
       IEnumerable<Person> query = from persElement in this.xmlDocument.Descendants("Person")
                                   let dateOfBirthString = persElement.Element("DateOfBirth")?.Value
-                                  let dateOfBirthFormat = persElement.Element("DateOfBirth") != null ? 
-                                                            persElement.Element("DateOfBirth").Attribute("format")?.Value 
-                                                            : 
+                                  let dateOfBirthFormat = persElement.Element("DateOfBirth") != null ?
+                                                            persElement.Element("DateOfBirth").Attribute("format")?.Value
+                                                            :
                                                             ""
                                   select new Person()
                                   {
