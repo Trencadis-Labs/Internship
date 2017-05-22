@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Models;
 using Models.Core;
+using Models.IO;
 using Models.Paging;
 using Models.Sorting;
 using Presentation.ConsoleUI.Views.Abstractions;
@@ -51,14 +52,16 @@ namespace Presentation.ConsoleUI
       // register dependencies
       serviceCollection
         .AddSingleton(provider => provider.GetService<IOptions<GlobalSettings>>().Value)
-        //.AddTransient<IPersonRepository, DatabasePersonRepository>()
+        .AddTransient<IPathServices, DefaultPathServices>()
         .AddTransient<IPersonRepository>(provider =>
         {
           var globalSettings = provider.GetService<IOptions<GlobalSettings>>().Value;
 
           return StringSwitch<IPersonRepository>
                   .On(globalSettings.UsedRepo)
-                  .Case("Xml", () => new XmlPersonRepository(globalSettings))
+                  .Case("Xml", () => new XmlPersonRepository(
+                                      settings: globalSettings,
+                                      pathServices: provider.GetService<IPathServices>()))
                   .MultiCase(new[] { "Db", "Database" }, () => new DatabasePersonRepository(globalSettings))
                   .Default(() => new InMemoryPersonRepository())
                   .Evaluate();

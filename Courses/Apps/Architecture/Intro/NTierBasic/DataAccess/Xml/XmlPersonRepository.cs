@@ -1,6 +1,7 @@
 ﻿using DataAccess.Abstractions;
 using Models;
 using Models.Extensions;
+using Models.IO;
 using Models.Paging;
 using Models.Sorting;
 using System;
@@ -15,17 +16,22 @@ namespace DataAccess.Xml
   {
     private readonly XDocument xmlDocument;
 
-    public XmlPersonRepository(GlobalSettings settings)
-      : this(xmlPath: settings?.RepositoriesConfig?.Xml?.Path)
+    public XmlPersonRepository(GlobalSettings settings, IPathServices pathServices = null)
+      : this(xmlPath: settings?.RepositoriesConfig?.Xml?.Path, pathServices: pathServices)
     {
 
     }
 
-    public XmlPersonRepository(string xmlPath)
+    public XmlPersonRepository(string xmlPath, IPathServices pathServices = null)
     {
       if (string.IsNullOrWhiteSpace(xmlPath))
       {
         throw new ArgumentNullException($"{nameof(xmlPath)}");
+      }
+
+      if (pathServices != null)
+      {
+        xmlPath = xmlPath.Replace(PathPlaceholders.CurrentDirectory, pathServices.GetCurrentDirectory());
       }
 
       if (!File.Exists(xmlPath))
