@@ -11,6 +11,7 @@ using Microsoft.Extensions.Options;
 using Models;
 using Models.Core;
 using Models.IO;
+using Presentation.WebUI.ModelBinding;
 
 namespace Presentation.WebUI
 {
@@ -36,7 +37,12 @@ namespace Presentation.WebUI
               .Configure<GlobalSettings>(Configuration.GetSection("Configuration"));
 
       // Add framework services.
-      services.AddMvc();
+      services.AddMvc(
+        options =>
+        {
+          options.ModelBinderProviders.Insert(0, new PersonModelBinderProvider());
+        }
+      );
 
       services
        .AddSingleton(provider => provider.GetService<IOptions<GlobalSettings>>().Value)

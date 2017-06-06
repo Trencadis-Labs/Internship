@@ -1,0 +1,24 @@
+﻿@{
+  ViewData["Title"] = "Add Person";
+}
+
+<h2>New person's info:</h2>
+<form action="/Home/SaveNewPerson" method="post">
+  <div>
+    <label for="txtFirstName">First Name:</label>
+    <input type="text" id="txtFirstName" name="txtFirstName" />
+  </div>
+
+  <div>
+    <label for="txtLastName">Last Name:</label>
+    <input type="text" id="txtLastName" name="txtLastName" />
+  </div>
+
+  <div>
+    <label for="txtDateOfBirth">Date of Birth:</label>
+    <input type="date" id="txtDateOfBirth" name="txtDateOfBirth" />
+  </div>
+
+  <input type="submit" value="Submit"/>
+</form>
+
