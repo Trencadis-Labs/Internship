@@ -6,6 +6,44 @@
 @using Models.Sorting;
 @model SortedPagedCollection<Person, PersonSortCriteria>
 
+@functions
+{
+  string ConditionalAttribute(bool condition, string attrOnTrue, string attrOnFalse)
+  {
+    return condition ? attrOnTrue : attrOnFalse;
+  }
+
+  IEnumerable<SelectListItem> GetPageSizes()
+  {
+    return new SelectListItem[]
+    {
+      new SelectListItem() { Text = "10", Value = "10" },
+      new SelectListItem() { Text = "20", Value = "20" },
+      new SelectListItem() { Text = "30", Value = "30" },
+      new SelectListItem() { Text = "50", Value = "50" }
+    };
+  }
+
+  IEnumerable<SelectListItem> GetSortCriterias()
+  {
+    return new SelectListItem[]
+    {
+      new SelectListItem() { Text = "By Id", Value = PersonSortCriteria.ById.ToString() },
+      new SelectListItem() { Text = "By First Name", Value = PersonSortCriteria.ByFirstName.ToString() },
+      new SelectListItem() { Text = "By Last Name", Value = PersonSortCriteria.ByLastName.ToString() },
+      new SelectListItem() { Text = "By Birth Date", Value = PersonSortCriteria.ByBirthDate.ToString() }
+    };
+  }
+
+  IEnumerable<SelectListItem> GetSortDirections()
+  {
+    return new SelectListItem[]
+    {
+      new SelectListItem() { Text = "Asc", Value = SortDirection.Ascending.ToString() },
+      new SelectListItem() { Text = "Desc", Value = SortDirection.Descending.ToString() }
+    };
+  }
+}
 <div>
   <h2>Person list</h2>
 
@@ -23,29 +61,60 @@
         <div class="col-md-4">@string.Format("{0:dd-MM-yyyy}", p.DateOfBirth)</div>
       </div>
     }
+    <div class="row">
+      <label for="PageSize">Page Size:</label>
+      <select asp-for="@Model.PageSize"
+              asp-items="GetPageSizes()"
+              data-pg-index="@Model.PageIndex"
+              data-sort-criteria="@Model.SortCriteria"
+              data-sort-dir="@Model.SortDirection">
+      </select>
+      &nbsp;
+      <label>Sort By:</label>
+
+      <select asp-for="@Model.SortCriteria"
+              asp-items="GetSortCriterias()"
+              data-pg-index="@Model.PageIndex"
+              data-pg-size="@Model.PageSize"
+              data-sort-dir="@Model.SortDirection"></select>
+
+      <select asp-for="@Model.SortDirection"
+              asp-items="GetSortDirections()"
+              data-pg-index="@Model.PageIndex"
+              data-pg-size="@Model.PageSize"
+              data-sort-criteria="@Model.SortCriteria"></select>
+    </div>
     <div>
       <ul class="pagination">
         <li>
-          <a asp-controller="Home" 
-             asp-action="List" 
-             asp-route-pageIndex="0">First Pg</a>
+          <a asp-controller="Home"
+             asp-action="List"
+             asp-route-pageIndex="0"
+             asp-route-pageSize="@Model.PageSize"
+             asp-route-criteria="@Model.SortCriteria"
+             asp-route-sortDirection="@Model.SortDirection">First Pg</a>
         </li>
         @for (int i = 0; i < Model.TotalPagesCount; i++)
         {
-          <li>
+          <li class="@ConditionalAttribute(Model.PageIndex == i, "active", "")">
             <a asp-controller="Home"
                asp-action="List"
-               asp-route-pageIndex="@i">@string.Format("{0}", i + 1)</a>
-          </li>
+               asp-route-pageIndex="@i"
+               asp-route-pageSize="@Model.PageSize"
+               asp-route-criteria="@Model.SortCriteria"
+               asp-route-sortDirection="@Model.SortDirection">@string.Format("{0}", i + 1)</a>
+            </li>
         }
         <li>
           <a asp-controller="Home"
              asp-action="List"
-             asp-route-pageIndex="@(Model.TotalPagesCount-1)">Last Pg</a>
+             asp-route-pageIndex="@(Model.TotalPagesCount-1)"
+             asp-route-pageSize="@Model.PageSize"
+             asp-route-criteria="@Model.SortCriteria"
+             asp-route-sortDirection="@Model.SortDirection">Last Pg</a>
         </li>
       </ul>
     </div>
   </div>
-
 
 </div>

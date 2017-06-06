@@ -1,13 +1,13 @@
 ﻿namespace Models.Sorting
 {
   public enum PersonSortCriteria
-    {
-      ById = 0,
+  {
+    ById = 0,
 
-      ByFirstName,
+    ByFirstName,
 
-      ByLastName,
+    ByLastName,
 
-      ByBirthDate
-    }
+    ByBirthDate
+  }
 }
