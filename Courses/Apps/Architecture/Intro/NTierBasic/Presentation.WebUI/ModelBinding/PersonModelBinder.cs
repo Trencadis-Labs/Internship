@@ -16,13 +16,13 @@ namespace Presentation.WebUI.ModelBinding
       }
 
       var firstNameProviderResult =
-           bindingContext.ValueProvider.GetValue("txtFirstName");
+           bindingContext.ValueProvider.GetValue("FirstName");
 
       var lastNameProviderResult =
-           bindingContext.ValueProvider.GetValue("txtLastName");
+           bindingContext.ValueProvider.GetValue("LastName");
 
       var dateOfBirthProviderResult =
-           bindingContext.ValueProvider.GetValue("txtDateOfBirth");
+           bindingContext.ValueProvider.GetValue("DateOfBirth");
 
       DateTime dateOfBirth = DateTime.MinValue;
       DateTime.TryParse(dateOfBirthProviderResult.FirstValue, out dateOfBirth);

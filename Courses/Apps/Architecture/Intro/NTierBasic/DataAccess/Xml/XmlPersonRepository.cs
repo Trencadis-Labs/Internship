@@ -1,5 +1,6 @@
 ﻿using DataAccess.Abstractions;
 using Models;
+using Models.CRUD;
 using Models.Extensions;
 using Models.IO;
 using Models.Paging;
@@ -8,18 +9,19 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml;
 using System.Xml.Linq;
 
 namespace DataAccess.Xml
 {
   public class XmlPersonRepository : IPersonRepository
   {
+    private readonly string xmlPath;
     private readonly XDocument xmlDocument;
 
     public XmlPersonRepository(GlobalSettings settings, IPathServices pathServices = null)
       : this(xmlPath: settings?.RepositoriesConfig?.Xml?.Path, pathServices: pathServices)
     {
-
     }
 
     public XmlPersonRepository(string xmlPath, IPathServices pathServices = null)
@@ -39,6 +41,7 @@ namespace DataAccess.Xml
         throw new FileNotFoundException($"XML file cannot be found at path '{xmlPath}'");
       }
 
+      this.xmlPath = xmlPath;
       this.xmlDocument = XDocument.Load(xmlPath);
     }
 
@@ -123,6 +126,42 @@ namespace DataAccess.Xml
       var data = query.Skip(pageIndex * pageSize).Take(pageSize);
 
       return new SortedPagedCollection<Person, PersonSortCriteria>(data, pageIndex, pageSize, totalRecordsCount, sortCriteria, sortDirection);
+    }
+
+    public Person Create(CreatePersonDTO createModel)
+    {
+      var nextID = this.xmlDocument.Descendants("Person")
+                    .Select(xmlElem => int.Parse(xmlElem.Attribute("id").Value))
+                    .Max() + 1;
+
+      var newPerson = new Person
+      {
+        Id = nextID,
+        FirstName = createModel.FirstName,
+        LastName = createModel.LastName,
+        DateOfBirth = createModel.DateOfBirth
+      };
+
+      var personElement = new XElement(
+        "Person",
+        new XAttribute("id", nextID),
+        new XElement("FirstName", newPerson.FirstName),
+        new XElement("LastName", newPerson.LastName),
+        new XElement(
+          "DateOfBirth",
+          new XAttribute("format", "dd-MM-yyyy"),
+          newPerson.DateOfBirth.ToString("dd-MM-yyyy"))
+       );
+
+      this.xmlDocument.Root.Add(personElement);
+
+      using (var stream = new FileStream(this.xmlPath, FileMode.Open))
+      {
+        this.xmlDocument.Save(stream);
+      }
+
+      return newPerson;
+
     }
   }
 }

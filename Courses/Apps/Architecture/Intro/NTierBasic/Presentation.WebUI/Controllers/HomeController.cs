@@ -44,16 +44,6 @@ namespace Presentation.WebUI.Controllers
       return View("Index", data);
     }
 
-    public IActionResult AddPerson()
-    {
-      return View();
-    }
-
-    public IActionResult SaveNewPerson(Person p)
-    {
-      return RedirectToAction("List");
-    }
-
     public IActionResult Error()
     {
       return View();

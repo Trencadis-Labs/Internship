@@ -1,6 +1,7 @@
 ﻿using DataAccess.Abstractions;
 using Models;
 using Models.Core;
+using Models.CRUD;
 using Models.Paging;
 using Models.Sorting;
 using System;
@@ -103,6 +104,37 @@ namespace DataAccess.Database
       }
 
       return new SortedPagedCollection<Person, PersonSortCriteria>(itemsPerPage, pageIndex, pageSize, totalRecordsCount, sortCriteria, sortDirection);
+    }
+
+    public Person Create(CreatePersonDTO createModel)
+    {
+      var sql = @"
+        INSERT INTO Person(FirstName, LastName, DateOfBirth)
+        VALUES(@FirstName, @LastName, @DateOfBirth);
+
+        SELECT @@IDENTITY";
+
+      using (var sqlConnection = new SqlConnection(this.connectionString))
+      {
+        sqlConnection.Open();
+
+        using (var sqlCmd = new SqlCommand(sql, sqlConnection))
+        {
+          sqlCmd.Parameters.AddWithValue("FirstName", createModel.FirstName);
+          sqlCmd.Parameters.AddWithValue("LastName", createModel.LastName);
+          sqlCmd.Parameters.AddWithValue("DateOfBirth", createModel.DateOfBirth);
+
+          var nextID = Convert.ToInt32(sqlCmd.ExecuteScalar());
+
+          return new Person()
+          {
+            Id = nextID,
+            FirstName = createModel.FirstName,
+            LastName = createModel.LastName,
+            DateOfBirth = createModel.DateOfBirth
+          };
+        }
+      }
     }
   }
 }

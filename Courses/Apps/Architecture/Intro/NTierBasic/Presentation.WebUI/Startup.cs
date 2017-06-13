@@ -4,6 +4,8 @@ using DataAccess.InMemory;
 using DataAccess.Xml;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -12,6 +14,8 @@ using Models;
 using Models.Core;
 using Models.IO;
 using Presentation.WebUI.ModelBinding;
+using System.Collections.Generic;
+using System.Globalization;
 
 namespace Presentation.WebUI
 {
@@ -35,6 +39,12 @@ namespace Presentation.WebUI
     {
       services.AddOptions()
               .Configure<GlobalSettings>(Configuration.GetSection("Configuration"));
+
+      services.AddLocalization(options => options.ResourcesPath = "Resource");
+
+      services.AddMvc()
+        .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+        .AddDataAnnotationsLocalization();
 
       // Add framework services.
       services.AddMvc(
@@ -77,6 +87,21 @@ namespace Presentation.WebUI
       {
         app.UseExceptionHandler("/Home/Error");
       }
+
+      var supportedCultures = new[]
+      {
+        new CultureInfo("en-US"),
+        new CultureInfo("ro-RO")
+      };
+
+      var localizationOptions = new RequestLocalizationOptions
+      {
+        DefaultRequestCulture = new RequestCulture("en-US"),
+        SupportedCultures = supportedCultures,
+        SupportedUICultures = supportedCultures
+      };
+
+      app.UseRequestLocalization(localizationOptions);
 
       app.UseStaticFiles();
 

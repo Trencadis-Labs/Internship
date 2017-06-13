@@ -5,6 +5,7 @@ using Models.Sorting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Models.CRUD;
 
 namespace DataAccess.InMemory
 {
@@ -103,6 +104,24 @@ namespace DataAccess.InMemory
       var data = query.Skip(pageIndex * pageSize).Take(pageSize);
 
       return new SortedPagedCollection<Person, PersonSortCriteria>(data, pageIndex, pageSize, totalRecordsCount, sortCriteria, sortDirection);
+    }
+
+    public Person Create(CreatePersonDTO createModel)
+    {
+      int nextID = InMemoryPersonRepository.personsCollection
+                    .Max(p => p.Id) + 1;
+
+      var newPerson = new Person
+      {
+        Id = nextID,
+        FirstName = createModel.FirstName,
+        LastName = createModel.LastName,
+        DateOfBirth = createModel.DateOfBirth
+      };
+
+      InMemoryPersonRepository.personsCollection.Add(newPerson);
+
+      return newPerson;
     }
 
     private static IEnumerable<Person> DefaultDataSetInitialization()

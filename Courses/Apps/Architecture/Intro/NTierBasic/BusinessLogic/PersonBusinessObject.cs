@@ -1,5 +1,6 @@
 ﻿using DataAccess.Abstractions;
 using Models;
+using Models.CRUD;
 using Models.Paging;
 using Models.Sorting;
 using System;
@@ -33,6 +34,18 @@ namespace BusinessLogic
       }
 
       return this.personsRepository.GetPersonsPaged(pageIndex, pageSize, sortCriteria, sortDirection);
+    }
+
+    public Person Create(CreatePersonDTO createModel)
+    {
+      if(createModel == null)
+      {
+        throw new ArgumentNullException(nameof(createModel));
+      }
+
+      var newPerson = this.personsRepository.Create(createModel);
+
+      return newPerson;
     }
   }
 }
