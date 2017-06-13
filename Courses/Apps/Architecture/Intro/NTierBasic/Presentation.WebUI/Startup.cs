@@ -40,7 +40,7 @@ namespace Presentation.WebUI
       services.AddOptions()
               .Configure<GlobalSettings>(Configuration.GetSection("Configuration"));
 
-      services.AddLocalization(options => options.ResourcesPath = "Resource");
+      services.AddLocalization(options => options.ResourcesPath = "Resources");
 
       services.AddMvc()
         .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
@@ -91,6 +91,7 @@ namespace Presentation.WebUI
       var supportedCultures = new[]
       {
         new CultureInfo("en-US"),
+        new CultureInfo("ro"),
         new CultureInfo("ro-RO")
       };
 

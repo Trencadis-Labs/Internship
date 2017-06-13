@@ -1,16 +1,20 @@
+@using Microsoft.AspNetCore.Mvc.Localization
 @model Presentation.WebUI.Models.CreatePerson
 
+@inject IViewLocalizer Localizer
+
 @{
-  ViewData["Title"] = "Create Person";
+  ViewData["Title"] = Localizer["Create_Person"];
   Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <form asp-action="Save">
   <div class="form-horizontal">
-    <h4>Create Person</h4>
+    <h4>@Localizer["Create_Person"]</h4>
     <hr />
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="form-group">
+      @Html.LabelFor(m => m.FirstName, "First Name", new { @class = "my-css-class", disabled = "disabled" })
       <label asp-for="FirstName" class="col-md-2 control-label"></label>
       <div class="col-md-10">
         <input asp-for="FirstName" class="form-control" />
@@ -33,14 +37,14 @@
     </div>
     <div class="form-group">
       <div class="col-md-offset-2 col-md-10">
-        <input type="submit" value="Create" class="btn btn-default" />
+        <input type="submit" value="@Localizer["Create_Person"]" class="btn btn-default" />
       </div>
     </div>
   </div>
 </form>
 
 <div>
-  <a asp-action="Index" asp-controller="Home">Back to List</a>
+  <a asp-action="Index" asp-controller="Home">@Localizer["Back_to_List"]</a>
 </div>
 
 @section Scripts {
