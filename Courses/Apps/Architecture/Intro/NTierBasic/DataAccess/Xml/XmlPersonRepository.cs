@@ -163,5 +163,26 @@ namespace DataAccess.Xml
       return newPerson;
 
     }
+
+    public Person GetById(int id)
+    {
+      var query = from persElement in this.xmlDocument.Descendants("Person")
+                  let persId = int.Parse(persElement.Attribute("id").Value)
+                  let dateOfBirthString = persElement.Element("DateOfBirth")?.Value
+                  let dateOfBirthFormat = persElement.Element("DateOfBirth") != null ?
+                                            persElement.Element("DateOfBirth").Attribute("format")?.Value
+                                            :
+                                            ""
+                  where persId == id
+                  select new Person()
+                  {
+                    Id = persId,
+                    FirstName = persElement.Element("FirstName")?.Value,
+                    LastName = persElement.Element("LastName")?.Value,
+                    DateOfBirth = dateOfBirthString.ParseWithFormat(dateOfBirthFormat)
+                  };
+
+      return query.FirstOrDefault();
+    }
   }
 }

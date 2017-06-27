@@ -124,6 +124,15 @@ namespace DataAccess.InMemory
       return newPerson;
     }
 
+    public Person GetById(int id)
+    {
+      var person = InMemoryPersonRepository.personsCollection
+                    .Where(p => p.Id == id)
+                    .FirstOrDefault();
+
+      return person;
+    }
+
     private static IEnumerable<Person> DefaultDataSetInitialization()
     {
       List<Person> persons = new List<Person>();

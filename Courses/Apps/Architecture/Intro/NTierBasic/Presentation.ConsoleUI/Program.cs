@@ -1,5 +1,8 @@
-﻿using DataAccess.Abstractions;
+﻿using BusinessLogic.Abstractions;
+using BusinessLogic.PersonImages;
+using DataAccess.Abstractions;
 using DataAccess.Database;
+using DataAccess.FileSystem;
 using DataAccess.InMemory;
 using DataAccess.Xml;
 using Microsoft.Extensions.Configuration;
@@ -53,6 +56,8 @@ namespace Presentation.ConsoleUI
       serviceCollection
         .AddSingleton(provider => provider.GetService<IOptions<GlobalSettings>>().Value)
         .AddTransient<IPathServices, DefaultPathServices>()
+        .AddTransient<IFileManager, FileSystemFileManager>()
+        .AddTransient<IPersonImageFileNameGenerator, GenerateImageFileNameFromPersonId>()
         .AddTransient<IPersonRepository>(provider =>
         {
           var globalSettings = provider.GetService<IOptions<GlobalSettings>>().Value;
@@ -84,6 +89,8 @@ namespace Presentation.ConsoleUI
       PersonUi ui = new PersonUi(
         pageSize: 10,
         personRepository: serviceProvider.GetService<IPersonRepository>(),
+        fileNameGenerator: serviceProvider.GetService<IPersonImageFileNameGenerator>(),
+        fileManager: serviceProvider.GetService<IFileManager>(),
         personListingView: serviceProvider.GetService<IView<SortedPagedCollection<Person, PersonSortCriteria>>>(),
         menuView: serviceProvider.GetService<IEventPublishView<SortedPagedCollection<Person, PersonSortCriteria>>>(),
         unknownCommandView: serviceProvider.GetService<IView<string>>());

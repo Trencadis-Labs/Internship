@@ -1,19 +1,20 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Presentation.WebUI.Models
 {
   public class CreatePerson
   {
-    //[Required(ErrorMessageResourceName = "CreatePerson_FirstNameIsRequired", 
+    //[Required(ErrorMessageResourceName = "CreateOrUpdatePerson_FirstNameIsRequired", 
     //          ErrorMessageResourceType = typeof(Resource))]
-    [Required(ErrorMessage = "CreatePerson_FirstNameIsRequired")]
+    [Required(ErrorMessage = "CreateOrUpdatePerson_FirstNameIsRequired")]
     [Display(Name = "FirstName")]
     public string FirstName { get; set; }
 
-    //[Required(ErrorMessageResourceName = "CreatePerson_LastNameIsRequired",
+    //[Required(ErrorMessageResourceName = "CreateOrUpdatePerson_LastNameIsRequired",
     //          ErrorMessageResourceType = typeof(Resource))]
-    [Required(ErrorMessage = "CreatePerson_LastNameIsRequired")]
+    [Required(ErrorMessage = "CreateOrUpdatePerson_LastNameIsRequired")]
     [Display(Name = "LastName")]
     public string LastName { get; set; }
 
@@ -29,11 +30,12 @@ namespace Presentation.WebUI.Models
       }
     }
 
-    //[Required (ErrorMessageResourceName = "CreatePerson_DateOfBirthRequired",
+    //[Required (ErrorMessageResourceName = "CreateOrUpdatePerson_DateOfBirthRequired",
     //          ErrorMessageResourceType = typeof(Resource))]
-    [Required(ErrorMessage = "CreatePerson_DateOfBirthRequired")]
+    [Required(ErrorMessage = "CreateOrUpdatePerson_DateOfBirthRequired")]
     [Display(Name = "DateOfBirth")]
-    [DataType(DataType.Date)]
     public DateTime DateOfBirth { get; set; }
+
+    public IFormFile Image { get; set; }
   }
 }

@@ -9,5 +9,9 @@ namespace Models.CRUD
     public string LastName { get; set; }
 
     public DateTime DateOfBirth { get; set; }
+
+    public byte[] ImageData { get; set; }
+
+    public string ImageFileName { get; set; }
   }
 }

@@ -31,7 +31,9 @@
     <ProjectReference Include="..\Models\Models.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="_Uploads\" />
     <Folder Include="Views\AddPerson\" />
+    <Folder Include="Views\UpdatePerson\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Resource.Designer.cs">
@@ -44,7 +46,17 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>CreatePerson.resx</DependentUpon>
     </Compile>
+    <Compile Update="Resources\Models\UpdatePerson.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>UpdatePerson.resx</DependentUpon>
+    </Compile>
     <Compile Update="Resources\Views\AddPerson\Index.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Index.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Views\UpdatePerson\Index.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Index.resx</DependentUpon>
@@ -65,11 +77,25 @@
     <EmbeddedResource Update="Resources\Models\CreatePerson.ro.resx">
       <Generator>ResXFileCodeGenerator</Generator>
     </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Models\UpdatePerson.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>UpdatePerson.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Models\UpdatePerson.ro.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Resources\Views\AddPerson\Index.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Index.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\Views\AddPerson\Index.ro.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Views\UpdatePerson\Index.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Index.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Views\UpdatePerson\Index.ro.resx">
       <Generator>ResXFileCodeGenerator</Generator>
     </EmbeddedResource>
   </ItemGroup>

@@ -117,13 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CreatePerson_DateOfBirthRequired" xml:space="preserve">
+  <data name="CreateOrUpdatePerson_DateOfBirthRequired" xml:space="preserve">
     <value>Date of Birth is required</value>
   </data>
-  <data name="CreatePerson_FirstNameIsRequired" xml:space="preserve">
+  <data name="CreateOrUpdatePerson_FirstNameIsRequired" xml:space="preserve">
     <value>First Name is required</value>
   </data>
-  <data name="CreatePerson_LastNameIsRequired" xml:space="preserve">
+  <data name="CreateOrUpdatePerson_LastNameIsRequired" xml:space="preserve">
     <value>Last Name is required</value>
   </data>
 </root>

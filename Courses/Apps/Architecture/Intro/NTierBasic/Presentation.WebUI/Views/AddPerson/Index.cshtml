@@ -8,13 +8,12 @@
   Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<form asp-action="Save">
+<form asp-action="Save" method="post" enctype="multipart/form-data">
   <div class="form-horizontal">
     <h4>@Localizer["Create_Person"]</h4>
     <hr />
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="form-group">
-      @Html.LabelFor(m => m.FirstName, "First Name", new { @class = "my-css-class", disabled = "disabled" })
       <label asp-for="FirstName" class="col-md-2 control-label"></label>
       <div class="col-md-10">
         <input asp-for="FirstName" class="form-control" />
@@ -31,10 +30,19 @@
     <div class="form-group">
       <label asp-for="DateOfBirth" class="col-md-2 control-label"></label>
       <div class="col-md-10">
-        <input asp-for="DateOfBirth" class="form-control" />
+        <input asp-for="DateOfBirth" class="form-control date-picker-control" />
         <span asp-validation-for="DateOfBirth" class="text-danger"></span>
       </div>
     </div>
+
+    <div class="form-group">
+      <label asp-for="Image" class="col-md-2 control-label"></label>
+      <div class="col-md-10">
+        <input asp-for="Image" class="form-control" />
+      </div>
+    </div>
+
+
     <div class="form-group">
       <div class="col-md-offset-2 col-md-10">
         <input type="submit" value="@Localizer["Create_Person"]" class="btn btn-default" />

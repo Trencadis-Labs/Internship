@@ -64,27 +64,27 @@ namespace Presentation.WebUI.Resources.Models {
         /// <summary>
         ///   Looks up a localized string similar to Date of birth is required!!!.
         /// </summary>
-        internal static string CreatePerson_DateOfBirthRequired {
+        internal static string CreateOrUpdatePerson_DateOfBirthRequired {
             get {
-                return ResourceManager.GetString("CreatePerson_DateOfBirthRequired", resourceCulture);
+                return ResourceManager.GetString("CreateOrUpdatePerson_DateOfBirthRequired", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to First name is required!!!.
         /// </summary>
-        internal static string CreatePerson_FirstNameIsRequired {
+        internal static string CreateOrUpdatePerson_FirstNameIsRequired {
             get {
-                return ResourceManager.GetString("CreatePerson_FirstNameIsRequired", resourceCulture);
+                return ResourceManager.GetString("CreateOrUpdatePerson_FirstNameIsRequired", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Last name is required!!!.
         /// </summary>
-        internal static string CreatePerson_LastNameIsRequired {
+        internal static string CreateOrUpdatePerson_LastNameIsRequired {
             get {
-                return ResourceManager.GetString("CreatePerson_LastNameIsRequired", resourceCulture);
+                return ResourceManager.GetString("CreateOrUpdatePerson_LastNameIsRequired", resourceCulture);
             }
         }
         

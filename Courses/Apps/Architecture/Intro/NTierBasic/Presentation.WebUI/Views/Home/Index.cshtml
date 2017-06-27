@@ -51,16 +51,25 @@
   </div>
   <div class="container-fluid">
     <div class="row" style="background-color:#dcd7d7;">
-      <div class="col-md-4">#ID</div>
-      <div class="col-md-4">Full Name</div>
-      <div class="col-md-4">Date of Birth</div>
+      <div class="col-md-3">#ID</div>
+      <div class="col-md-3">Full Name</div>
+      <div class="col-md-3">Date of Birth</div>
+      <div class="col-md-3">&nbsp;</div>
     </div>
     @foreach (var p in Model.Data)
     {
       <div class="row">
-        <div class="col-md-4">@p.Id</div>
-        <div class="col-md-4">@p.FullName</div>
-        <div class="col-md-4">@string.Format("{0:dd-MM-yyyy}", p.DateOfBirth)</div>
+        <div class="col-md-3">@p.Id</div>
+        <div class="col-md-3">@p.FullName</div>
+        <div class="col-md-3">@string.Format("{0:dd-MM-yyyy}", p.DateOfBirth)</div>
+        <div class="col-md-3">
+          <a asp-controller="UpdatePerson"
+             asp-action="Index"
+             asp-route-id="@p.Id">Edit</a>
+          &nbsp;
+          &nbsp;
+          <a href="javascript:void(0)" class="delete-btn" data-id="@p.Id" data-full-name="@Html.Encode(p.FullName)">Delete</a>
+        </div>
       </div>
     }
     <div class="row">
@@ -118,5 +127,18 @@
       </ul>
     </div>
   </div>
-
 </div>
+
+@section Scripts {
+  <script type="text/javascript">
+    (function ($) {
+      $(document).ready(function () {
+        $(".delete-btn").click(function () {
+          var id = $(this).data("id");
+          var fullName = $(this)
+
+        });
+      });
+    }(jQuery));
+  </script>
+}

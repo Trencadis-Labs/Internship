@@ -1,0 +1,55 @@
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Presentation.WebUI.Globalization
+
+@model Presentation.WebUI.Models.UpdatePerson
+
+@inject IViewLocalizer Localizer
+
+@{
+  ViewData["Title"] = Localizer["Update_Person"];
+  Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form asp-action="Save">
+  <div class="form-horizontal">
+    <h4>@Localizer["Update_Person"]</h4>
+    <hr />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+      <label asp-for="FirstName" class="col-md-2 control-label"></label>
+      <div class="col-md-10">
+        <input asp-for="FirstName" class="form-control" />
+        <span asp-validation-for="FirstName" class="text-danger"></span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label asp-for="LastName" class="col-md-2 control-label"></label>
+      <div class="col-md-10">
+        <input asp-for="LastName" class="form-control" />
+        <span asp-validation-for="LastName" class="text-danger"></span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label asp-for="DateOfBirth" class="col-md-2 control-label"></label>
+      <div class="col-md-10">
+        <input asp-for="DateOfBirth" class="form-control date-picker-control" value="@Context.Request.FormatDateTimeFor_JQueryUI(Model.DateOfBirth)" />
+        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-md-offset-2 col-md-10">
+        <input type="submit" value="@Localizer["Update_Person"]" class="btn btn-default" />
+      </div>
+    </div>
+  </div>
+</form>
+
+<div>
+  <a asp-action="Index" asp-controller="Home">@Localizer["Back_to_List"]</a>
+</div>
+
+@section Scripts {
+  @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+

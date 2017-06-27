@@ -1,4 +1,5 @@
 ﻿using BusinessLogic;
+using BusinessLogic.Abstractions;
 using DataAccess.Abstractions;
 using Models;
 using Models.Core;
@@ -16,6 +17,8 @@ namespace Presentation.ConsoleUI
     private readonly int pageSize;
 
     private readonly IPersonRepository personRepository;
+    private readonly IPersonImageFileNameGenerator fileNameGenerator;
+    private readonly IFileManager fileManager;
 
     private readonly IView<SortedPagedCollection<Person, PersonSortCriteria>> personListingView;
 
@@ -34,6 +37,8 @@ namespace Presentation.ConsoleUI
     public PersonUi(
       int pageSize,
       IPersonRepository personRepository,
+      IPersonImageFileNameGenerator fileNameGenerator,
+      IFileManager fileManager,
       IView<SortedPagedCollection<Person, PersonSortCriteria>> personListingView,
       IEventPublishView<SortedPagedCollection<Person, PersonSortCriteria>> menuView,
       IView<string> unknownCommandView)
@@ -43,35 +48,17 @@ namespace Presentation.ConsoleUI
         throw new ArgumentException($"The value '{pageSize}' used for page size is invalid, it must be a strictly positive numeric value");
       }
 
-      if (personRepository == null)
-      {
-        throw new ArgumentNullException($"{nameof(personRepository)}");
-      }
-
-      if (personListingView == null)
-      {
-        throw new ArgumentNullException($"{nameof(personListingView)}");
-      }
-
-      if (menuView == null)
-      {
-        throw new ArgumentNullException($"{nameof(menuView)}");
-      }
-
-      if (unknownCommandView == null)
-      {
-        throw new ArgumentNullException($"{nameof(unknownCommandView)}");
-      }
-
       this.pageSize = pageSize;
 
-      this.personRepository = personRepository;
+      this.personRepository = personRepository ?? throw new ArgumentNullException(nameof(personRepository));
+      this.fileNameGenerator = fileNameGenerator ?? throw new ArgumentNullException(nameof(fileNameGenerator));
+      this.fileManager = fileManager ?? throw new ArgumentNullException(nameof(fileManager));
 
-      this.personListingView = personListingView;
+      this.personListingView = personListingView ?? throw new ArgumentNullException($"{nameof(personListingView)}");
 
-      this.menuView = menuView;
+      this.menuView = menuView ?? throw new ArgumentNullException($"{nameof(menuView)}");
 
-      this.unknownCommandView = unknownCommandView;
+      this.unknownCommandView = unknownCommandView ?? throw new ArgumentNullException($"{nameof(unknownCommandView)}");
     }
 
     public void Start()
@@ -162,7 +149,7 @@ namespace Presentation.ConsoleUI
 
     private void LoadDataForCurrentPage()
     {
-      var personBO = new PersonBusinessObject(this.personRepository);
+      var personBO = new PersonBusinessObject(this.personRepository, this.fileNameGenerator, this.fileManager);
 
       this.data = personBO.GetPersonsPaged(this.pageIndex, this.pageSize, this.sortCriteria, this.sortDirection);
 

@@ -1,5 +1,8 @@
-﻿using DataAccess.Abstractions;
+﻿using BusinessLogic.Abstractions;
+using BusinessLogic.PersonImages;
+using DataAccess.Abstractions;
 using DataAccess.Database;
+using DataAccess.FileSystem;
 using DataAccess.InMemory;
 using DataAccess.Xml;
 using Microsoft.AspNetCore.Builder;
@@ -13,16 +16,22 @@ using Microsoft.Extensions.Options;
 using Models;
 using Models.Core;
 using Models.IO;
+using Presentation.WebUI.Globalization;
 using Presentation.WebUI.ModelBinding;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 
 namespace Presentation.WebUI
 {
   public class Startup
   {
+    private IHostingEnvironment environment;
+
     public Startup(IHostingEnvironment env)
     {
+      this.environment = env;
+
       var builder = new ConfigurationBuilder()
           .SetBasePath(env.ContentRootPath)
           .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
@@ -57,6 +66,16 @@ namespace Presentation.WebUI
       services
        .AddSingleton(provider => provider.GetService<IOptions<GlobalSettings>>().Value)
        .AddTransient<IPathServices, DefaultPathServices>()
+       .AddTransient<IFileManager, FileSystemFileManager>(serviceProvider => 
+       {
+         string webRootPath = this.environment.WebRootPath;
+         var uploadsFolderPath = Path.Combine(
+                                  new DirectoryInfo(Path.Combine(webRootPath)).Parent.FullName, 
+                                  "_Uploads");
+
+         return new FileSystemFileManager(uploadsFolderPath);
+       })
+       .AddTransient<IPersonImageFileNameGenerator, GenerateImageFileNameFromPersonId>()
        .AddTransient<IPersonRepository>(provider =>
        {
          var globalSettings = provider.GetService<IOptions<GlobalSettings>>().Value;
@@ -88,18 +107,11 @@ namespace Presentation.WebUI
         app.UseExceptionHandler("/Home/Error");
       }
 
-      var supportedCultures = new[]
-      {
-        new CultureInfo("en-US"),
-        new CultureInfo("ro"),
-        new CultureInfo("ro-RO")
-      };
-
       var localizationOptions = new RequestLocalizationOptions
       {
-        DefaultRequestCulture = new RequestCulture("en-US"),
-        SupportedCultures = supportedCultures,
-        SupportedUICultures = supportedCultures
+        DefaultRequestCulture = new RequestCulture(SupportedCultures.Default),
+        SupportedCultures = SupportedCultures.All,
+        SupportedUICultures = SupportedCultures.All
       };
 
       app.UseRequestLocalization(localizationOptions);

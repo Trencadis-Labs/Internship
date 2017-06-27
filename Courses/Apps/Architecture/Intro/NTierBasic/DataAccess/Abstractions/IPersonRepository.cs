@@ -10,5 +10,7 @@ namespace DataAccess.Abstractions
     SortedPagedCollection<Person, PersonSortCriteria> GetPersonsPaged(int pageIndex, int pageSize, PersonSortCriteria sortCriteria, SortDirection sortDirection);
 
     Person Create(CreatePersonDTO createModel);
+
+    Person GetById(int id);
   }
 }

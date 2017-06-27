@@ -1,24 +1,28 @@
-﻿using DataAccess.Abstractions;
+﻿using BusinessLogic.Abstractions;
+using DataAccess.Abstractions;
 using Models;
 using Models.CRUD;
 using Models.Paging;
 using Models.Sorting;
 using System;
+using System.IO;
 
 namespace BusinessLogic
 {
   public class PersonBusinessObject
   {
     private readonly IPersonRepository personsRepository;
+    private readonly IPersonImageFileNameGenerator fileNameGenerator;
+    private readonly IFileManager fileManager;
 
-    public PersonBusinessObject(IPersonRepository personsRepository)
+    public PersonBusinessObject(
+      IPersonRepository personsRepository,
+      IPersonImageFileNameGenerator fileNameGenerator,
+      IFileManager fileManager)
     {
-      if (personsRepository == null)
-      {
-        throw new ArgumentNullException($"{nameof(personsRepository)}");
-      }
-
-      this.personsRepository = personsRepository;
+      this.personsRepository = personsRepository ?? throw new ArgumentNullException(nameof(personsRepository));
+      this.fileNameGenerator = fileNameGenerator ?? throw new ArgumentNullException(nameof(fileNameGenerator));
+      this.fileManager = fileManager ?? throw new ArgumentNullException(nameof(fileManager));
     }
 
     public SortedPagedCollection<Person, PersonSortCriteria> GetPersonsPaged(int pageIndex, int pageSize, PersonSortCriteria sortCriteria, SortDirection sortDirection)
@@ -44,6 +48,15 @@ namespace BusinessLogic
       }
 
       var newPerson = this.personsRepository.Create(createModel);
+
+      if(createModel.ImageData != null)
+      {
+        var fileName = this.fileNameGenerator.GetImageFileName(newPerson);
+
+        var fileExtension = Path.GetExtension(createModel.ImageFileName);
+
+        this.fileManager.SaveFile(fileName + "." + fileExtension, createModel.ImageData);
+      }
 
       return newPerson;
     }

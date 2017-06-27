@@ -136,5 +136,50 @@ namespace DataAccess.Database
         }
       }
     }
+
+    public Person GetById(int id)
+    {
+      var sqlQuery = new StringBuilder();
+      sqlQuery.Append(@"
+        SELECT
+                Id,
+                FirstName,
+                LastName,
+                DateOfBirth
+        FROM
+                Person
+        WHERE
+                Id = @Id;");
+
+      Person result = null;
+
+      using (var sqlConnection = new SqlConnection(this.connectionString))
+      {
+        sqlConnection.Open();
+
+        using (var sqlCmd = new SqlCommand(sqlQuery.ToString(), sqlConnection))
+        {
+          sqlCmd.Parameters.AddWithValue("Id", id);
+
+          using (var reader = sqlCmd.ExecuteReader())
+          {
+            if (reader.Read())
+            {
+              result = new Person
+              {
+                Id = (int)reader["Id"],
+                FirstName = reader["FirstName"]?.ToString(),
+                LastName = reader["LastName"]?.ToString(),
+                DateOfBirth = (reader["DateOfBirth"] != DBNull.Value) ? (DateTime)reader["DateOfBirth"] : DateTime.MinValue
+              };
+            }
+          }
+        }
+
+        sqlConnection.Close();
+      }
+
+      return result;
+    }
   }
 }
