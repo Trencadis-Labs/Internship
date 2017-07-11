@@ -55,7 +55,8 @@ namespace DataAccess.Database
                 Id,
                 FirstName,
                 LastName,
-                DateOfBirth
+                DateOfBirth,
+                ImageFileName
         FROM
                 Person
         ) as data
@@ -89,7 +90,8 @@ namespace DataAccess.Database
                 Id = (int)reader["Id"],
                 FirstName = reader["FirstName"]?.ToString(),
                 LastName = reader["LastName"]?.ToString(),
-                DateOfBirth = (reader["DateOfBirth"] != DBNull.Value) ? (DateTime)reader["DateOfBirth"] : DateTime.MinValue
+                DateOfBirth = (reader["DateOfBirth"] != DBNull.Value) ? (DateTime)reader["DateOfBirth"] : DateTime.MinValue,
+                ImageFileName = reader["ImageFileName"]?.ToString()
               });
             }
           }
@@ -109,8 +111,8 @@ namespace DataAccess.Database
     public Person Create(CreatePersonDTO createModel)
     {
       var sql = @"
-        INSERT INTO Person(FirstName, LastName, DateOfBirth)
-        VALUES(@FirstName, @LastName, @DateOfBirth);
+        INSERT INTO Person(FirstName, LastName, DateOfBirth, ImageFileName)
+        VALUES(@FirstName, @LastName, @DateOfBirth, @ImageFileName);
 
         SELECT @@IDENTITY";
 
@@ -123,6 +125,7 @@ namespace DataAccess.Database
           sqlCmd.Parameters.AddWithValue("FirstName", createModel.FirstName);
           sqlCmd.Parameters.AddWithValue("LastName", createModel.LastName);
           sqlCmd.Parameters.AddWithValue("DateOfBirth", createModel.DateOfBirth);
+          sqlCmd.Parameters.AddWithValue("ImageFileName", createModel.ImageFileName);
 
           var nextID = Convert.ToInt32(sqlCmd.ExecuteScalar());
 
@@ -131,7 +134,8 @@ namespace DataAccess.Database
             Id = nextID,
             FirstName = createModel.FirstName,
             LastName = createModel.LastName,
-            DateOfBirth = createModel.DateOfBirth
+            DateOfBirth = createModel.DateOfBirth,
+            ImageFileName = createModel.ImageFileName
           };
         }
       }
@@ -145,7 +149,8 @@ namespace DataAccess.Database
                 Id,
                 FirstName,
                 LastName,
-                DateOfBirth
+                DateOfBirth,
+                ImageFileName
         FROM
                 Person
         WHERE
@@ -170,7 +175,8 @@ namespace DataAccess.Database
                 Id = (int)reader["Id"],
                 FirstName = reader["FirstName"]?.ToString(),
                 LastName = reader["LastName"]?.ToString(),
-                DateOfBirth = (reader["DateOfBirth"] != DBNull.Value) ? (DateTime)reader["DateOfBirth"] : DateTime.MinValue
+                DateOfBirth = (reader["DateOfBirth"] != DBNull.Value) ? (DateTime)reader["DateOfBirth"] : DateTime.MinValue,
+                ImageFileName = reader["ImageFileName"]?.ToString()
               };
             }
           }

@@ -58,7 +58,8 @@ namespace DataAccess.Xml
                                     Id = int.Parse(persElement.Attribute("id").Value),
                                     FirstName = persElement.Element("FirstName")?.Value,
                                     LastName = persElement.Element("LastName")?.Value,
-                                    DateOfBirth = dateOfBirthString.ParseWithFormat(dateOfBirthFormat)
+                                    DateOfBirth = dateOfBirthString.ParseWithFormat(dateOfBirthFormat),
+                                    ImageFileName = persElement.Element("ImageFileName")?.Value,
                                   };
 
       switch (sortCriteria)
@@ -139,7 +140,8 @@ namespace DataAccess.Xml
         Id = nextID,
         FirstName = createModel.FirstName,
         LastName = createModel.LastName,
-        DateOfBirth = createModel.DateOfBirth
+        DateOfBirth = createModel.DateOfBirth,
+        ImageFileName = createModel.ImageFileName
       };
 
       var personElement = new XElement(
@@ -150,12 +152,13 @@ namespace DataAccess.Xml
         new XElement(
           "DateOfBirth",
           new XAttribute("format", "dd-MM-yyyy"),
-          newPerson.DateOfBirth.ToString("dd-MM-yyyy"))
+          newPerson.DateOfBirth.ToString("dd-MM-yyyy")),
+        new XElement("ImageFileName", newPerson.ImageFileName)
        );
 
       this.xmlDocument.Root.Add(personElement);
 
-      using (var stream = new FileStream(this.xmlPath, FileMode.Open))
+      using (var stream = new FileStream(this.xmlPath, FileMode.Create))
       {
         this.xmlDocument.Save(stream);
       }
@@ -179,7 +182,8 @@ namespace DataAccess.Xml
                     Id = persId,
                     FirstName = persElement.Element("FirstName")?.Value,
                     LastName = persElement.Element("LastName")?.Value,
-                    DateOfBirth = dateOfBirthString.ParseWithFormat(dateOfBirthFormat)
+                    DateOfBirth = dateOfBirthString.ParseWithFormat(dateOfBirthFormat),
+                    ImageFileName = persElement.Element("ImageFileName")?.Value,
                   };
 
       return query.FirstOrDefault();

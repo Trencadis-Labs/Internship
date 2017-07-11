@@ -60,5 +60,16 @@ namespace BusinessLogic
 
       return newPerson;
     }
+
+    public byte[] GetPersonImage(int personID)
+    {
+      var person = this.personsRepository.GetById(personID);
+
+      var fileName = this.fileNameGenerator.GetImageFileName(person);
+
+      var fileExtension = Path.GetExtension(person.ImageFileName);
+
+      return this.fileManager.ReadFile(fileName + "." + fileExtension);
+    }
   }
 }

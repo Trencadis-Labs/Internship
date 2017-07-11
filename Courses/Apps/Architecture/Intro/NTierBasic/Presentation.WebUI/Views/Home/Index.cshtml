@@ -50,19 +50,39 @@
     <a href="/AddPerson/Index">Add Person</a>
   </div>
   <div class="container-fluid">
-    <div class="row" style="background-color:#dcd7d7;">
-      <div class="col-md-3">#ID</div>
-      <div class="col-md-3">Full Name</div>
-      <div class="col-md-3">Date of Birth</div>
-      <div class="col-md-3">&nbsp;</div>
+    <div class="row header-row" style="background-color:#dcd7d7;">
+      <div class="col-md-3">
+        <span>#ID</span>
+      </div>
+      <div class="col-md-3">
+        <span>Full Name</span>
+      </div>
+      <div class="col-md-3">
+        <span>Date of Birth</span>
+      </div>
+      <div class="col-md-3">
+        <span>&nbsp;</span>
+      </div>
     </div>
     @foreach (var p in Model.Data)
     {
-      <div class="row">
-        <div class="col-md-3">@p.Id</div>
-        <div class="col-md-3">@p.FullName</div>
-        <div class="col-md-3">@string.Format("{0:dd-MM-yyyy}", p.DateOfBirth)</div>
+      <div class="@ConditionalAttribute(!string.IsNullOrWhiteSpace(p.ImageFileName), "row row-big", "row")">
         <div class="col-md-3">
+          <span>@p.Id</span>
+        </div>
+        <div class="col-md-3">
+          @if (!string.IsNullOrWhiteSpace(p.ImageFileName))
+          {
+          <img alt="Image" src="~/Home/DownloadImage?personId=@p.Id" style="width:40px; height:40px;" />
+          }
+          <span>@p.FullName</span>
+        </div>
+        <div class="col-md-3">
+          <span>@string.Format("{0:dd-MM-yyyy}", p.DateOfBirth)</span>
+        </div>
+        <div class="col-md-3" style="text-align:right;">
+          &nbsp;
+          &nbsp;
           <a asp-controller="UpdatePerson"
              asp-action="Index"
              asp-route-id="@p.Id">Edit</a>

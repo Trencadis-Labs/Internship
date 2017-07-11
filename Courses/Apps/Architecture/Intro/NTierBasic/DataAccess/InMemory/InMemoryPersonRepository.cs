@@ -116,7 +116,8 @@ namespace DataAccess.InMemory
         Id = nextID,
         FirstName = createModel.FirstName,
         LastName = createModel.LastName,
-        DateOfBirth = createModel.DateOfBirth
+        DateOfBirth = createModel.DateOfBirth,
+        ImageFileName = createModel.ImageFileName
       };
 
       InMemoryPersonRepository.personsCollection.Add(newPerson);

@@ -23,5 +23,7 @@ namespace Models
     }
 
     public DateTime DateOfBirth { get; set; }
+
+    public string ImageFileName { get; set; }
   }
 }

@@ -48,6 +48,15 @@ namespace Presentation.WebUI.Controllers
       return View("Index", data);
     }
 
+    public IActionResult DownloadImage(int personId)
+    {
+      var personBO = new PersonBusinessObject(this.personRepository, this.fileNameGenerator, this.fileManager);
+
+      var fileRawData = personBO.GetPersonImage(personId);
+
+      return File(fileRawData, "image/png");
+    }
+
     public IActionResult Error()
     {
       return View();

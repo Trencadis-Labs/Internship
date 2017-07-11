@@ -28,10 +28,20 @@ textarea {
     width: 100%;
 }
 
+.header-row, .row-big {
+  /*height: 40px;
+  vertical-align: middle;*/
+}
+
+div.header-row div.col-md-3, div.row-big div.col-md-3{
+  height: 40px;
+}
+
+
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {
-    /* Hide captions */
-    .carousel-caption {
+  /* Hide captions */
+  .carousel-caption {
         display: none;
     }
 }
